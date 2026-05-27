@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../../data/finanzas.db"
+}
+
+model Deuda {
+  id          String       @id @default(cuid())
+  nombre      String
+  valor       Int
+  saldo       Int
+  estado      String       @default("Pendiente")
+  mes         String
+  creadoEn    DateTime     @default(now()) @map("creado_en")
+  movimientos Movimiento[]
+
+  @@map("deudas")
+}
+
+model Fuente {
+  id          String       @id @default(cuid())
+  nombre      String
+  tipo        String
+  saldo       Int          @default(0)
+  movimientos Movimiento[]
+  gastos      Gasto[]
+
+  @@map("fuentes")
+}
+
+model Movimiento {
+  id          String   @id @default(cuid())
+  tipo        String
+  fuenteId    String?  @map("fuente_id")
+  deudaId     String?  @map("deuda_id")
+  descripcion String?
+  monto       Int
+  fecha       DateTime @default(now())
+  fuente      Fuente?  @relation(fields: [fuenteId], references: [id])
+  deuda       Deuda?   @relation(fields: [deudaId], references: [id])
+
+  @@map("movimientos")
+}
+
+model Gasto {
+  id          String   @id @default(cuid())
+  descripcion String
+  categoria   String
+  monto       Int
+  mes         String
+  fuenteId    String?  @map("fuente_id")
+  fecha       DateTime @default(now())
+  fuente      Fuente?  @relation(fields: [fuenteId], references: [id])
+
+  @@map("gastos")
+}

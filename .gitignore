@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.env
+*.env
+
+# SQLite database (datos locales, no se versiona)
+data/
+
+# Prisma generated client
+apps/api/node_modules/
+
+# Build outputs
+apps/web/dist/
+apps/api/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
