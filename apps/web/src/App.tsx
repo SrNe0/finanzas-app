@@ -6,6 +6,7 @@ import { ResumenPageWrapper } from './pages/ResumenPageWrapper'
 import { DeudasPage } from './pages/DeudasPage'
 import { GastosPage } from './pages/GastosPage'
 import { DisponiblePage } from './pages/DisponiblePage'
+import { useAppStore } from './store/appStore'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,6 +18,8 @@ const queryClient = new QueryClient({
 })
 
 export function App() {
+  const theme = useAppStore(state => state.theme)
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
@@ -29,7 +32,7 @@ export function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      <Toaster theme="dark" position="bottom-right" richColors />
+      <Toaster theme={theme} position="bottom-right" richColors />
     </QueryClientProvider>
   )
 }
