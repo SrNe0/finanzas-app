@@ -1,5 +1,6 @@
 import { EstadoDeuda } from 'shared-types'
 import { DomainError } from '../errors/DomainError'
+import { validarMonto } from '../validaciones'
 
 export class Deuda {
   constructor(
@@ -14,6 +15,7 @@ export class Deuda {
 
   pagar(monto: number): void {
     if (this.saldo === 0) throw new DomainError('La deuda ya está pagada')
+    validarMonto(monto)
     if (monto > this.saldo) throw new DomainError('Monto supera el saldo')
     this.saldo -= monto
     this.estado = this.saldo === 0 ? EstadoDeuda.PAGADO : EstadoDeuda.EN_PROCESO

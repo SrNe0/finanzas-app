@@ -23,8 +23,8 @@ export class PagarDeudaUseCase {
       if (!fuente) throw new NotFoundError('Fuente', input.fuenteId)
 
       const monto = input.monto ?? deuda.saldo
-      fuente.debitar(monto)
       deuda.pagar(monto)
+      fuente.debitar(monto)
 
       await repos.fuentes.update(fuente)
       await repos.deudas.update(deuda)
