@@ -13,6 +13,7 @@ export class Deuda {
   ) {}
 
   pagar(monto: number): void {
+    if (this.saldo === 0) throw new DomainError('La deuda ya está pagada')
     if (monto > this.saldo) throw new DomainError('Monto supera el saldo')
     this.saldo -= monto
     this.estado = this.saldo === 0 ? EstadoDeuda.PAGADO : EstadoDeuda.EN_PROCESO
@@ -20,6 +21,7 @@ export class Deuda {
 
   actualizarSaldo(nuevoSaldo: number): void {
     if (nuevoSaldo < 0) throw new DomainError('Saldo no puede ser negativo')
+    if (nuevoSaldo > this.valor) throw new DomainError('El saldo no puede superar el valor de la deuda')
     this.saldo = nuevoSaldo
     if (nuevoSaldo === 0) this.estado = EstadoDeuda.PAGADO
     else if (nuevoSaldo < this.valor) this.estado = EstadoDeuda.EN_PROCESO

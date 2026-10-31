@@ -1,6 +1,6 @@
 import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
-import { NotFoundError } from '../../../domain/errors/DomainError'
+import { DomainError, NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, EstadoDeuda, DeudaDTO, FuenteDTO } from 'shared-types'
 import { DeudaMapper } from '../../../infrastructure/mappers/DeudaMapper'
 import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
@@ -23,35 +23,38 @@ export class ActualizarSaldoDeudaUseCase {
 
       if (input.nombre !== undefined) deuda.nombre = input.nombre
 
+      // Marcar la deuda como Pagado equivale a dejar su saldo en 0 (pagando lo que falta).
+      let nuevoSaldo = input.nuevoSaldo
+      if (input.nuevoEstado === EstadoDeuda.PAGADO) {
+        if (nuevoSaldo !== undefined && nuevoSaldo !== 0) {
+          throw new DomainError('Una deuda pagada debe tener saldo 0')
+        }
+        nuevoSaldo = 0
+      }
+
       let fuente = undefined
-      if (input.nuevoSaldo !== undefined) {
-        const diferencia = deuda.saldo - input.nuevoSaldo
+      if (nuevoSaldo !== undefined) {
+        const diferencia = deuda.saldo - nuevoSaldo
+        deuda.actualizarSaldo(nuevoSaldo)
+
         if (diferencia > 0 && input.fuenteId) {
           const f = await repos.fuentes.findById(input.fuenteId)
           if (!f) throw new NotFoundError('Fuente', input.fuenteId)
           f.debitar(diferencia)
           await repos.fuentes.update(f)
+          const concepto = nuevoSaldo === 0 ? 'Pago' : 'Pago parcial'
           await repos.movimientos.save(
-            new Movimiento(null, TipoMovimiento.PAGO_DEUDA, f.id, deuda.id, `Pago parcial ${deuda.nombre}`, diferencia, new Date())
+            new Movimiento(null, TipoMovimiento.PAGO_DEUDA, f.id, deuda.id, `${concepto} ${deuda.nombre}`, diferencia, new Date())
           )
           fuente = FuenteMapper.toDTO(f)
         }
-        deuda.actualizarSaldo(input.nuevoSaldo)
       }
 
-      if (input.nuevoEstado !== undefined) {
-        deuda.estado = input.nuevoEstado
-        if (input.nuevoEstado === EstadoDeuda.PAGADO) {
-          deuda.saldo = 0
-          if (input.fuenteId && !input.nuevoSaldo) {
-            const f = await repos.fuentes.findById(input.fuenteId)
-            if (f) {
-              f.debitar(deuda.saldo)
-              await repos.fuentes.update(f)
-              fuente = FuenteMapper.toDTO(f)
-            }
-          }
-        }
+      // El estado lo determina el saldo: un estado que no coincide es incoherente.
+      if (input.nuevoEstado !== undefined && input.nuevoEstado !== deuda.estado) {
+        throw new DomainError(
+          `El estado "${input.nuevoEstado}" no es coherente con el saldo ${deuda.saldo} de una deuda de valor ${deuda.valor}`
+        )
       }
 
       const updated = await repos.deudas.update(deuda)
