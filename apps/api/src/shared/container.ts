@@ -24,7 +24,6 @@ import { TransferirFuentesUseCase } from '../application/usecases/fuentes/Transf
 import { ObtenerResumenMensualUseCase } from '../application/usecases/resumen/ObtenerResumenMensualUseCase'
 
 export function buildContainer(prisma: PrismaClient = new PrismaClient()) {
-
   const deudaRepo = new PrismaDeudaRepository(prisma)
   const fuenteRepo = new PrismaFuenteRepository(prisma)
   const movimientoRepo = new PrismaMovimientoRepository(prisma)

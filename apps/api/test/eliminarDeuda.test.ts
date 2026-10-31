@@ -105,7 +105,7 @@ describe('EliminarDeuda', () => {
 
     expect(await saldoDe(fuente.id)).toBe(180_000)
     const restantes = await prisma.movimiento.findMany({ orderBy: { monto: 'asc' } })
-    expect(restantes.map((m) => [m.tipo, m.monto])).toEqual([
+    expect(restantes.map(m => [m.tipo, m.monto])).toEqual([
       [TipoMovimiento.INGRESO, 5_000],
       [TipoMovimiento.PAGO_DEUDA, 20_000],
     ])

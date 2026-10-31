@@ -22,7 +22,7 @@ const ActualizarDeudaSchema = z.object({
 })
 
 export async function deudasRoutes(fastify: FastifyInstance, container: Container) {
-  fastify.get('/deudas', async (req) => {
+  fastify.get('/deudas', async req => {
     const query = z.object({ mes: MesSchema }).parse(req.query)
     return container.deudas.listar.execute(query.mes)
   })
@@ -33,7 +33,7 @@ export async function deudasRoutes(fastify: FastifyInstance, container: Containe
     return reply.code(201).send(deuda)
   })
 
-  fastify.patch('/deudas/:id', async (req) => {
+  fastify.patch('/deudas/:id', async req => {
     const { id } = req.params as { id: string }
     const body = ActualizarDeudaSchema.parse(req.body)
     const { deuda } = await container.deudas.actualizar.execute({
@@ -46,7 +46,7 @@ export async function deudasRoutes(fastify: FastifyInstance, container: Containe
     return deuda
   })
 
-  fastify.post('/deudas/:id/pagar', async (req) => {
+  fastify.post('/deudas/:id/pagar', async req => {
     const { id } = req.params as { id: string }
     const body = PagarDeudaSchema.parse(req.body)
     return container.deudas.pagar.execute({ deudaId: id, ...body })

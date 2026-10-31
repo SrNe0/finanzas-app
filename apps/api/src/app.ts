@@ -18,12 +18,15 @@ export async function buildApp(container: Container, opciones: { logger?: boolea
 
   await fastify.register(cors, { origin: ORIGENES_PERMITIDOS })
 
-  fastify.register(async (app) => {
-    await deudasRoutes(app, container)
-    await fuentesRoutes(app, container)
-    await gastosRoutes(app, container)
-    await resumenRoutes(app, container)
-  }, { prefix: '/api' })
+  fastify.register(
+    async app => {
+      await deudasRoutes(app, container)
+      await fuentesRoutes(app, container)
+      await gastosRoutes(app, container)
+      await resumenRoutes(app, container)
+    },
+    { prefix: '/api' }
+  )
 
   fastify.setErrorHandler((error, _req, reply) => {
     if (error instanceof ZodError) {

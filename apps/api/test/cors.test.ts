@@ -19,7 +19,7 @@ async function pedir(origin: string) {
 }
 
 describe('CORS', () => {
-  it.each(['http://localhost:5173', 'http://127.0.0.1:5173'])('permite el origen de Vite %s', async (origin) => {
+  it.each(['http://localhost:5173', 'http://127.0.0.1:5173'])('permite el origen de Vite %s', async origin => {
     const respuesta = await pedir(origin)
 
     expect(respuesta.headers['access-control-allow-origin']).toBe(origin)
@@ -27,7 +27,7 @@ describe('CORS', () => {
 
   it.each(['http://sitio-malicioso.example', 'http://localhost:3000', 'http://192.168.1.50:5173'])(
     'no devuelve cabeceras CORS para el origen %s',
-    async (origin) => {
+    async origin => {
       const respuesta = await pedir(origin)
 
       expect(respuesta.headers['access-control-allow-origin']).toBeUndefined()

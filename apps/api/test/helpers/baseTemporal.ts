@@ -22,8 +22,8 @@ export async function crearBaseTemporal(): Promise<BaseTemporal> {
 
   const carpetas = fs
     .readdirSync(MIGRACIONES, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name)
+    .filter(e => e.isDirectory())
+    .map(e => e.name)
     .sort()
 
   for (const carpeta of carpetas) {
@@ -31,7 +31,7 @@ export async function crearBaseTemporal(): Promise<BaseTemporal> {
     for (const sentencia of sql.split(';')) {
       const sinComentarios = sentencia
         .split('\n')
-        .filter((linea) => !linea.trim().startsWith('--'))
+        .filter(linea => !linea.trim().startsWith('--'))
         .join('\n')
         .trim()
       if (sinComentarios) await prisma.$executeRawUnsafe(sinComentarios)

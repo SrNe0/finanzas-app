@@ -7,13 +7,13 @@ import { calcularDeudasPorEstado } from '../lib/deudasPorEstado'
 import { useFuentes } from '@/features/disponible/hooks/useFuentes'
 import { useAppStore } from '@/store/appStore'
 import { TrendingUp, TrendingDown, CreditCard, Wallet } from 'lucide-react'
-import {
-  PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend,
-} from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 
-interface Props { mes: string }
+interface Props {
+  mes: string
+}
 
 const CATEGORIA_COLORS = ['#58A6FF', '#3FB950', '#F85149', '#D29922', '#79C0FF', '#56D364', '#FFA657', '#8B949E']
 const FUENTE_COLORS = ['#58A6FF', '#3FB950', '#D29922', '#79C0FF']
@@ -27,7 +27,15 @@ const ESTADO_COLORS: Record<string, string> = {
 function DonutLabel({ cx, cy, label, value }: { cx: number; cy: number; label: string; value: string }) {
   return (
     <g>
-      <text x={cx} y={cy - 8} textAnchor="middle" fill="var(--color-text-primary)" fontSize={13} fontWeight={600} fontFamily="DM Mono, monospace">
+      <text
+        x={cx}
+        y={cy - 8}
+        textAnchor="middle"
+        fill="var(--color-text-primary)"
+        fontSize={13}
+        fontWeight={600}
+        fontFamily="DM Mono, monospace"
+      >
         {value}
       </text>
       <text x={cx} y={cy + 10} textAnchor="middle" fill="var(--color-text-sec)" fontSize={10}>
@@ -57,14 +65,18 @@ export function ResumenPage({ mes }: Props) {
   const tt = getTooltipProps(theme)
 
   if (isLoading) {
-    return <div className="space-y-4">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-40" />)}</div>
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-40" />
+        ))}
+      </div>
+    )
   }
 
   if (!data) return null
 
-  const porcentajePagado = data.totalDeudas > 0
-    ? Math.round((data.totalDeudasPagadas / data.totalDeudas) * 100)
-    : 0
+  const porcentajePagado = data.totalDeudas > 0 ? Math.round((data.totalDeudasPagadas / data.totalDeudas) * 100) : 0
 
   const deudaPendiente = data.totalDeudas - data.totalDeudasPagadas
 
@@ -88,11 +100,13 @@ export function ResumenPage({ mes }: Props) {
 
   // --- Donut 3: Gastos por categoría ---
   const categorias = [...new Set(data.gastos.map(g => g.categoria))]
-  const gastosPorCategoria = categorias.map((cat, i) => ({
-    name: cat,
-    value: data.gastos.filter(g => g.categoria === cat).reduce((s, g) => s + g.monto, 0),
-    color: CATEGORIA_COLORS[i % CATEGORIA_COLORS.length],
-  })).sort((a, b) => b.value - a.value)
+  const gastosPorCategoria = categorias
+    .map((cat, i) => ({
+      name: cat,
+      value: data.gastos.filter(g => g.categoria === cat).reduce((s, g) => s + g.monto, 0),
+      color: CATEGORIA_COLORS[i % CATEGORIA_COLORS.length],
+    }))
+    .sort((a, b) => b.value - a.value)
 
   // --- Donut 4: Disponible por fuente ---
   const disponiblePorFuente = fuentes
@@ -104,10 +118,34 @@ export function ResumenPage({ mes }: Props) {
     }))
 
   const metricCards = [
-    { label: 'Total ingresos', value: data.totalIngresos, icon: TrendingUp, color: 'text-accent-green', bg: 'bg-accent-green/10' },
-    { label: 'Pagos del mes', value: data.totalPagosDeuda, icon: CreditCard, color: 'text-accent-red', bg: 'bg-accent-red/10' },
-    { label: 'Total gastos', value: data.totalGastos, icon: TrendingDown, color: 'text-accent-amber', bg: 'bg-accent-amber/10' },
-    { label: 'Total disponible', value: data.totalDisponible, icon: Wallet, color: 'text-accent-blue', bg: 'bg-accent-blue/10' },
+    {
+      label: 'Total ingresos',
+      value: data.totalIngresos,
+      icon: TrendingUp,
+      color: 'text-accent-green',
+      bg: 'bg-accent-green/10',
+    },
+    {
+      label: 'Pagos del mes',
+      value: data.totalPagosDeuda,
+      icon: CreditCard,
+      color: 'text-accent-red',
+      bg: 'bg-accent-red/10',
+    },
+    {
+      label: 'Total gastos',
+      value: data.totalGastos,
+      icon: TrendingDown,
+      color: 'text-accent-amber',
+      bg: 'bg-accent-amber/10',
+    },
+    {
+      label: 'Total disponible',
+      value: data.totalDisponible,
+      icon: Wallet,
+      color: 'text-accent-blue',
+      bg: 'bg-accent-blue/10',
+    },
   ]
 
   return (
@@ -140,35 +178,38 @@ export function ResumenPage({ mes }: Props) {
         </div>
         <Progress value={porcentajePagado} />
         <div className="flex justify-between mt-2 text-xs text-text-secondary">
-          <span>Pagado: <span className="font-mono text-accent-green">{formatCOP(data.totalDeudasPagadas)}</span></span>
-          <span>Pendiente: <span className="font-mono text-accent-red">{formatCOP(deudaPendiente)}</span></span>
+          <span>
+            Pagado: <span className="font-mono text-accent-green">{formatCOP(data.totalDeudasPagadas)}</span>
+          </span>
+          <span>
+            Pendiente: <span className="font-mono text-accent-red">{formatCOP(deudaPendiente)}</span>
+          </span>
         </div>
       </div>
 
       {/* 4 charts grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
         {/* Chart 1: Balance general */}
         <ChartCard title="Balance general">
-          {balanceData.length === 0 ? <EmptyChart msg="Sin datos este mes" /> : (
+          {balanceData.length === 0 ? (
+            <EmptyChart msg="Sin datos este mes" />
+          ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={balanceData}
-                  cx="50%" cy="50%"
-                  innerRadius={55} outerRadius={80}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
                   dataKey="value"
                   paddingAngle={2}
-                  label={({ cx, cy }) => (
-                    <DonutLabel
-                      cx={cx} cy={cy}
-                      label="Total"
-                      value={formatCOP(balanceTotal)}
-                    />
-                  )}
+                  label={({ cx, cy }) => <DonutLabel cx={cx} cy={cy} label="Total" value={formatCOP(balanceTotal)} />}
                   labelLine={false}
                 >
-                  {balanceData.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                  {balanceData.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
                 </Pie>
                 <Tooltip
                   formatter={(v: number) => formatCOP(v)}
@@ -176,10 +217,7 @@ export function ResumenPage({ mes }: Props) {
                   labelStyle={tt.labelStyle}
                   itemStyle={tt.itemStyle}
                 />
-                <Legend
-                  formatter={(v) => <span className="text-xs text-text-secondary">{v}</span>}
-                  iconSize={8}
-                />
+                <Legend formatter={v => <span className="text-xs text-text-secondary">{v}</span>} iconSize={8} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -187,25 +225,32 @@ export function ResumenPage({ mes }: Props) {
 
         {/* Chart 2: Deudas por estado */}
         <ChartCard title="Deudas por estado">
-          {deudasPorEstado.length === 0 ? <EmptyChart msg="Sin deudas" /> : (
+          {deudasPorEstado.length === 0 ? (
+            <EmptyChart msg="Sin deudas" />
+          ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={deudasPorEstado}
-                  cx="50%" cy="50%"
-                  innerRadius={55} outerRadius={80}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
                   dataKey="value"
                   paddingAngle={2}
                   label={({ cx, cy }) => (
                     <DonutLabel
-                      cx={cx} cy={cy}
+                      cx={cx}
+                      cy={cy}
                       label="Total deudas"
                       value={formatCOP(deudasPorEstado.reduce((s, d) => s + d.value, 0))}
                     />
                   )}
                   labelLine={false}
                 >
-                  {deudasPorEstado.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                  {deudasPorEstado.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
                 </Pie>
                 <Tooltip
                   formatter={(v: number) => formatCOP(v)}
@@ -213,10 +258,7 @@ export function ResumenPage({ mes }: Props) {
                   labelStyle={tt.labelStyle}
                   itemStyle={tt.itemStyle}
                 />
-                <Legend
-                  formatter={(v) => <span className="text-xs text-text-secondary">{v}</span>}
-                  iconSize={8}
-                />
+                <Legend formatter={v => <span className="text-xs text-text-secondary">{v}</span>} iconSize={8} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -224,25 +266,27 @@ export function ResumenPage({ mes }: Props) {
 
         {/* Chart 3: Gastos por categoría */}
         <ChartCard title="Gastos por categoría">
-          {gastosPorCategoria.length === 0 ? <EmptyChart msg="Sin gastos este mes" /> : (
+          {gastosPorCategoria.length === 0 ? (
+            <EmptyChart msg="Sin gastos este mes" />
+          ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={gastosPorCategoria}
-                  cx="50%" cy="50%"
-                  innerRadius={55} outerRadius={80}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
                   dataKey="value"
                   paddingAngle={2}
                   label={({ cx, cy }) => (
-                    <DonutLabel
-                      cx={cx} cy={cy}
-                      label="Total gastos"
-                      value={formatCOP(data.totalGastos)}
-                    />
+                    <DonutLabel cx={cx} cy={cy} label="Total gastos" value={formatCOP(data.totalGastos)} />
                   )}
                   labelLine={false}
                 >
-                  {gastosPorCategoria.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                  {gastosPorCategoria.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
                 </Pie>
                 <Tooltip
                   formatter={(v: number, name: string) => [formatCOP(v), name]}
@@ -250,10 +294,7 @@ export function ResumenPage({ mes }: Props) {
                   labelStyle={tt.labelStyle}
                   itemStyle={tt.itemStyle}
                 />
-                <Legend
-                  formatter={(v) => <span className="text-xs text-text-secondary">{v}</span>}
-                  iconSize={8}
-                />
+                <Legend formatter={v => <span className="text-xs text-text-secondary">{v}</span>} iconSize={8} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -261,25 +302,27 @@ export function ResumenPage({ mes }: Props) {
 
         {/* Chart 4: Disponible por fuente */}
         <ChartCard title="Disponible por fuente">
-          {disponiblePorFuente.length === 0 ? <EmptyChart msg="Sin saldos" /> : (
+          {disponiblePorFuente.length === 0 ? (
+            <EmptyChart msg="Sin saldos" />
+          ) : (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={disponiblePorFuente}
-                  cx="50%" cy="50%"
-                  innerRadius={55} outerRadius={80}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
                   dataKey="value"
                   paddingAngle={2}
                   label={({ cx, cy }) => (
-                    <DonutLabel
-                      cx={cx} cy={cy}
-                      label="Total"
-                      value={formatCOP(data.totalDisponible)}
-                    />
+                    <DonutLabel cx={cx} cy={cy} label="Total" value={formatCOP(data.totalDisponible)} />
                   )}
                   labelLine={false}
                 >
-                  {disponiblePorFuente.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                  {disponiblePorFuente.map(entry => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
                 </Pie>
                 <Tooltip
                   formatter={(v: number) => formatCOP(v)}
@@ -287,10 +330,7 @@ export function ResumenPage({ mes }: Props) {
                   labelStyle={tt.labelStyle}
                   itemStyle={tt.itemStyle}
                 />
-                <Legend
-                  formatter={(v) => <span className="text-xs text-text-secondary">{v}</span>}
-                  iconSize={8}
-                />
+                <Legend formatter={v => <span className="text-xs text-text-secondary">{v}</span>} iconSize={8} />
               </PieChart>
             </ResponsiveContainer>
           )}
@@ -315,7 +355,8 @@ export function ResumenPage({ mes }: Props) {
                     </p>
                   </div>
                   <span className={`font-mono text-sm ${isPositivo ? 'text-accent-green' : 'text-accent-red'}`}>
-                    {isPositivo ? '+' : '-'}{formatCOP(m.monto)}
+                    {isPositivo ? '+' : '-'}
+                    {formatCOP(m.monto)}
                   </span>
                 </div>
               )

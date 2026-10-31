@@ -16,8 +16,12 @@ function clonar<T extends object>(entidad: T): T {
 
 /** Mes (AAAA-MM) de una fecha en la zona horaria de Bogotá. */
 export function mesDeBogota(fecha: Date): string {
-  const partes = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Bogota', year: 'numeric', month: '2-digit' }).formatToParts(fecha)
-  const dato = (tipo: string) => partes.find((p) => p.type === tipo)?.value
+  const partes = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Bogota',
+    year: 'numeric',
+    month: '2-digit',
+  }).formatToParts(fecha)
+  const dato = (tipo: string) => partes.find(p => p.type === tipo)?.value
   return `${dato('year')}-${dato('month')}`
 }
 
@@ -32,7 +36,10 @@ export interface Datos {
 type Generador = () => string
 
 class MemoriaDeudaRepository implements IDeudaRepository {
-  constructor(private datos: Datos, private nuevoId: Generador) {}
+  constructor(
+    private datos: Datos,
+    private nuevoId: Generador
+  ) {}
 
   async findById(id: string) {
     const d = this.datos.deudas.get(id)
@@ -41,20 +48,28 @@ class MemoriaDeudaRepository implements IDeudaRepository {
 
   async findByMes(mes: string) {
     return [...this.datos.deudas.values()]
-      .filter((d) => d.mes === mes)
+      .filter(d => d.mes === mes)
       .sort((a, b) => b.creadoEn.getTime() - a.creadoEn.getTime())
       .map(clonar)
   }
 
   async findPendientesAnterioresA(mes: string) {
     return [...this.datos.deudas.values()]
-      .filter((d) => d.mes < mes && d.estado !== EstadoDeuda.PAGADO)
+      .filter(d => d.mes < mes && d.estado !== EstadoDeuda.PAGADO)
       .sort((a, b) => a.mes.localeCompare(b.mes))
       .map(clonar)
   }
 
   async save(deuda: Deuda) {
-    const guardada = new Deuda(this.nuevoId(), deuda.nombre, deuda.valor, deuda.saldo, deuda.estado, deuda.mes, deuda.creadoEn)
+    const guardada = new Deuda(
+      this.nuevoId(),
+      deuda.nombre,
+      deuda.valor,
+      deuda.saldo,
+      deuda.estado,
+      deuda.mes,
+      deuda.creadoEn
+    )
     this.datos.deudas.set(guardada.id, clonar(guardada))
     return guardada
   }
@@ -70,7 +85,10 @@ class MemoriaDeudaRepository implements IDeudaRepository {
 }
 
 class MemoriaFuenteRepository implements IFuenteRepository {
-  constructor(private datos: Datos, private nuevoId: Generador) {}
+  constructor(
+    private datos: Datos,
+    private nuevoId: Generador
+  ) {}
 
   async findById(id: string) {
     const f = this.datos.fuentes.get(id)
@@ -94,7 +112,10 @@ class MemoriaFuenteRepository implements IFuenteRepository {
 }
 
 class MemoriaGastoRepository implements IGastoRepository {
-  constructor(private datos: Datos, private nuevoId: Generador) {}
+  constructor(
+    private datos: Datos,
+    private nuevoId: Generador
+  ) {}
 
   async findById(id: string) {
     const g = this.datos.gastos.get(id)
@@ -103,13 +124,21 @@ class MemoriaGastoRepository implements IGastoRepository {
 
   async findByMes(mes: string) {
     return [...this.datos.gastos.values()]
-      .filter((g) => g.mes === mes)
+      .filter(g => g.mes === mes)
       .sort((a, b) => b.fecha.getTime() - a.fecha.getTime())
       .map(clonar)
   }
 
   async save(gasto: Gasto) {
-    const guardado = new Gasto(this.nuevoId(), gasto.descripcion, gasto.categoria, gasto.monto, gasto.mes, gasto.fuenteId, gasto.fecha)
+    const guardado = new Gasto(
+      this.nuevoId(),
+      gasto.descripcion,
+      gasto.categoria,
+      gasto.monto,
+      gasto.mes,
+      gasto.fuenteId,
+      gasto.fecha
+    )
     this.datos.gastos.set(guardado.id as string, clonar(guardado))
     return guardado
   }
@@ -120,33 +149,53 @@ class MemoriaGastoRepository implements IGastoRepository {
 }
 
 class MemoriaMovimientoRepository implements IMovimientoRepository {
-  constructor(private datos: Datos, private nuevoId: Generador) {}
+  constructor(
+    private datos: Datos,
+    private nuevoId: Generador
+  ) {}
 
   private todos() {
     return [...this.datos.movimientos.values()]
   }
 
   async save(m: Movimiento) {
-    const guardado = new Movimiento(this.nuevoId(), m.tipo, m.fuenteId, m.deudaId, m.descripcion, m.monto, m.fecha, m.gastoId)
+    const guardado = new Movimiento(
+      this.nuevoId(),
+      m.tipo,
+      m.fuenteId,
+      m.deudaId,
+      m.descripcion,
+      m.monto,
+      m.fecha,
+      m.gastoId
+    )
     this.datos.movimientos.set(guardado.id as string, clonar(guardado))
     return guardado
   }
 
   async findByFuenteId(fuenteId: string) {
-    return this.todos().filter((m) => m.fuenteId === fuenteId).sort((a, b) => b.fecha.getTime() - a.fecha.getTime()).map(clonar)
+    return this.todos()
+      .filter(m => m.fuenteId === fuenteId)
+      .sort((a, b) => b.fecha.getTime() - a.fecha.getTime())
+      .map(clonar)
   }
 
   async findByGastoId(gastoId: string) {
-    const m = this.todos().find((x) => x.gastoId === gastoId)
+    const m = this.todos().find(x => x.gastoId === gastoId)
     return m ? clonar(m) : null
   }
 
   async findPagosByDeudaId(deudaId: string) {
-    return this.todos().filter((m) => m.deudaId === deudaId && m.tipo === TipoMovimiento.PAGO_DEUDA).map(clonar)
+    return this.todos()
+      .filter(m => m.deudaId === deudaId && m.tipo === TipoMovimiento.PAGO_DEUDA)
+      .map(clonar)
   }
 
   async findByMes(mes: string) {
-    return this.todos().filter((m) => mesDeBogota(m.fecha) === mes).sort((a, b) => b.fecha.getTime() - a.fecha.getTime()).map(clonar)
+    return this.todos()
+      .filter(m => mesDeBogota(m.fecha) === mes)
+      .sort((a, b) => b.fecha.getTime() - a.fecha.getTime())
+      .map(clonar)
   }
 
   async delete(id: string) {
@@ -155,7 +204,8 @@ class MemoriaMovimientoRepository implements IMovimientoRepository {
 }
 
 function copiar(datos: Datos): Datos {
-  const copiaMapa = <T extends object>(mapa: Map<string, T>) => new Map([...mapa].map(([id, e]) => [id, clonar(e)] as [string, T]))
+  const copiaMapa = <T extends object>(mapa: Map<string, T>) =>
+    new Map([...mapa].map(([id, e]) => [id, clonar(e)] as [string, T]))
   return {
     deudas: copiaMapa(datos.deudas),
     fuentes: copiaMapa(datos.fuentes),
@@ -204,14 +254,29 @@ export function crearMemoria() {
     return fuente
   }
 
-  const agregarDeuda = (valor: number, saldo = valor, estado = EstadoDeuda.PENDIENTE, mes = '2026-10', nombre = 'Tarjeta') => {
+  const agregarDeuda = (
+    valor: number,
+    saldo = valor,
+    estado = EstadoDeuda.PENDIENTE,
+    mes = '2026-10',
+    nombre = 'Tarjeta'
+  ) => {
     const deuda = new Deuda(nuevoId(), nombre, valor, saldo, estado, mes, new Date('2026-10-01T12:00:00Z'))
     datos.deudas.set(deuda.id, clonar(deuda))
     return deuda
   }
 
   const agregarMovimiento = (m: Partial<Movimiento> & { tipo: TipoMovimiento; monto: number }) => {
-    const mov = new Movimiento(nuevoId(), m.tipo, m.fuenteId ?? null, m.deudaId ?? null, m.descripcion ?? null, m.monto, m.fecha ?? new Date(), m.gastoId ?? null)
+    const mov = new Movimiento(
+      nuevoId(),
+      m.tipo,
+      m.fuenteId ?? null,
+      m.deudaId ?? null,
+      m.descripcion ?? null,
+      m.monto,
+      m.fecha ?? new Date(),
+      m.gastoId ?? null
+    )
     datos.movimientos.set(mov.id as string, clonar(mov))
     return mov
   }

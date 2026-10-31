@@ -7,7 +7,7 @@ describe('unidad de trabajo en memoria', () => {
     const fuente = m.agregarFuente('Cuenta', 10_000)
 
     await expect(
-      m.uow.run(async (repos) => {
+      m.uow.run(async repos => {
         const f = await repos.fuentes.findById(fuente.id)
         f!.depositar(5_000)
         await repos.fuentes.update(f!)
@@ -24,7 +24,7 @@ describe('unidad de trabajo en memoria', () => {
     const m = crearMemoria()
     const fuente = m.agregarFuente('Cuenta', 10_000)
 
-    await m.uow.run(async (repos) => {
+    await m.uow.run(async repos => {
       const f = await repos.fuentes.findById(fuente.id)
       f!.depositar(5_000)
       await repos.fuentes.update(f!)

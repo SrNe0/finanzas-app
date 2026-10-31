@@ -34,11 +34,16 @@ export function HistorialFuente({ fuente, onClose }: Props) {
           <p className="text-sm text-text-secondary text-center py-8">Sin movimientos</p>
         )}
         {movimientos?.map(m => (
-          <div key={m.id} className="flex items-center justify-between p-3 rounded-lg bg-background border border-border">
+          <div
+            key={m.id}
+            className="flex items-center justify-between p-3 rounded-lg bg-background border border-border"
+          >
             <div className="flex items-center gap-2">
-              {m.tipo === 'ingreso'
-                ? <TrendingUp className="h-4 w-4 text-accent-green shrink-0" />
-                : <TrendingDown className="h-4 w-4 text-accent-red shrink-0" />}
+              {m.tipo === 'ingreso' ? (
+                <TrendingUp className="h-4 w-4 text-accent-green shrink-0" />
+              ) : (
+                <TrendingDown className="h-4 w-4 text-accent-red shrink-0" />
+              )}
               <div>
                 <p className="text-xs text-text-primary">{m.descripcion ?? m.tipo}</p>
                 <p className="text-[11px] text-text-secondary">
@@ -47,7 +52,8 @@ export function HistorialFuente({ fuente, onClose }: Props) {
               </div>
             </div>
             <span className={`font-mono text-sm ${m.tipo === 'ingreso' ? 'text-accent-green' : 'text-accent-red'}`}>
-              {m.tipo === 'ingreso' ? '+' : '-'}{formatCOP(m.monto)}
+              {m.tipo === 'ingreso' ? '+' : '-'}
+              {formatCOP(m.monto)}
             </span>
           </div>
         ))}

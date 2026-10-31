@@ -5,7 +5,7 @@ export class EliminarGastoUseCase {
   constructor(private uow: IUnitOfWork) {}
 
   async execute(id: string): Promise<void> {
-    await this.uow.run(async (repos) => {
+    await this.uow.run(async repos => {
       const gasto = await repos.gastos.findById(id)
       if (!gasto) throw new NotFoundError('Gasto', id)
 

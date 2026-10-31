@@ -21,7 +21,12 @@ interface Props {
 export function CrearDeudaModal({ open, onClose, mes }: Props) {
   const crear = useCrearDeuda()
   type FormData = z.infer<typeof schema>
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = handleSubmit(async (data: FormData) => {
     await crear.mutateAsync({ nombre: data.nombre, valor: data.valor, mes })
@@ -47,7 +52,9 @@ export function CrearDeudaModal({ open, onClose, mes }: Props) {
             {errors.valor && <p className="text-xs text-accent-red mt-1">{errors.valor.message as string}</p>}
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
             <Button type="submit" disabled={crear.isPending}>
               {crear.isPending ? 'Guardando...' : 'Crear Deuda'}
             </Button>

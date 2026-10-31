@@ -63,7 +63,10 @@ export function TransferenciaModal({ open, onClose, fuentes }: Props) {
                 {fuentes.map(f => (
                   <button
                     key={f.id}
-                    onClick={() => { setOrigenId(f.id); if (destinoId === f.id) setDestinoId('') }}
+                    onClick={() => {
+                      setOrigenId(f.id)
+                      if (destinoId === f.id) setDestinoId('')
+                    }}
                     disabled={destinoId === f.id}
                     className={`w-full text-left p-2.5 rounded-lg border text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
                       origenId === f.id
@@ -87,7 +90,10 @@ export function TransferenciaModal({ open, onClose, fuentes }: Props) {
                 {fuentes.map(f => (
                   <button
                     key={f.id}
-                    onClick={() => { setDestinoId(f.id); if (origenId === f.id) setOrigenId('') }}
+                    onClick={() => {
+                      setDestinoId(f.id)
+                      if (origenId === f.id) setOrigenId('')
+                    }}
                     disabled={origenId === f.id}
                     className={`w-full text-left p-2.5 rounded-lg border text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
                       destinoId === f.id
@@ -143,7 +149,9 @@ export function TransferenciaModal({ open, onClose, fuentes }: Props) {
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+            <Button variant="outline" onClick={handleClose}>
+              Cancelar
+            </Button>
             <Button disabled={!canSubmit || transferir.isPending} onClick={handleSubmit}>
               {transferir.isPending ? 'Transfiriendo...' : 'Transferir'}
             </Button>
