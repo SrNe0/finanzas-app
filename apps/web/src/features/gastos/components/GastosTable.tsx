@@ -5,6 +5,7 @@ import { getTooltipProps } from '@/shared/lib/chartConfig'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ErrorMensaje } from '@/shared/components/ErrorMensaje'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,7 +31,7 @@ interface Props {
 const COLORS = ['#58A6FF', '#3FB950', '#F85149', '#D29922', '#8B949E', '#79C0FF', '#56D364', '#FFA657']
 
 export function GastosTable({ mes }: Props) {
-  const { data: gastos = [], isLoading } = useGastos(mes)
+  const { data: gastos = [], isLoading, error, refetch } = useGastos(mes)
   const eliminar = useEliminarGasto()
   const { theme } = useAppStore()
   const tt = getTooltipProps(theme)
@@ -54,6 +55,8 @@ export function GastosTable({ mes }: Props) {
         ))}
       </div>
     )
+
+  if (error) return <ErrorMensaje mensaje={error.message} onReintentar={() => refetch()} />
 
   return (
     <div>

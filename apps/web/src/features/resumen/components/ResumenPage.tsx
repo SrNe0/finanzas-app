@@ -1,4 +1,5 @@
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ErrorMensaje } from '@/shared/components/ErrorMensaje'
 import { Progress } from '@/shared/components/ui/progress'
 import { formatCOP } from '@/shared/lib/utils'
 import { getTooltipProps } from '@/shared/lib/chartConfig'
@@ -59,7 +60,7 @@ function EmptyChart({ msg }: { msg: string }) {
 }
 
 export function ResumenPage({ mes }: Props) {
-  const { data, isLoading } = useResumen(mes)
+  const { data, isLoading, error, refetch } = useResumen(mes)
   const { data: fuentes = [] } = useFuentes()
   const { theme } = useAppStore()
   const tt = getTooltipProps(theme)
@@ -73,6 +74,8 @@ export function ResumenPage({ mes }: Props) {
       </div>
     )
   }
+
+  if (error) return <ErrorMensaje mensaje={error.message} onReintentar={() => refetch()} />
 
   if (!data) return null
 

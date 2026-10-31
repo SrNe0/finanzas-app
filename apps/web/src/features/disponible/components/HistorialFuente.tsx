@@ -1,6 +1,7 @@
 import { X, TrendingDown, TrendingUp } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ErrorMensaje } from '@/shared/components/ErrorMensaje'
 import { formatCOP } from '@/shared/lib/utils'
 import { useHistorialFuente } from '../hooks/useFuentes'
 import { format } from 'date-fns'
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export function HistorialFuente({ fuente, onClose }: Props) {
-  const { data: movimientos, isLoading } = useHistorialFuente(fuente?.id ?? '')
+  const { data: movimientos, isLoading, error, refetch } = useHistorialFuente(fuente?.id ?? '')
 
   if (!fuente) return null
 
@@ -29,6 +30,7 @@ export function HistorialFuente({ fuente, onClose }: Props) {
         </Button>
       </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
+        {error && <ErrorMensaje mensaje={error.message} onReintentar={() => refetch()} />}
         {isLoading && Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14" />)}
         {!isLoading && movimientos?.length === 0 && (
           <p className="text-sm text-text-secondary text-center py-8">Sin movimientos</p>

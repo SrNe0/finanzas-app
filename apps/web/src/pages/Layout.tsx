@@ -3,6 +3,7 @@ import { MonthSelector } from '@/shared/components/MonthSelector'
 import { useAppStore } from '@/store/appStore'
 import { Sun, Moon } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 
 const TABS = [
   { path: '/', label: 'Resumen' },
@@ -46,7 +47,9 @@ export function Layout() {
         </div>
       </header>
       <main className="max-w-6xl mx-auto px-4 py-6">
-        <Outlet />
+        <ErrorBoundary key={location.pathname}>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </div>
   )
