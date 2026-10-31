@@ -105,7 +105,12 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>¿Eliminar deuda?</AlertDialogTitle>
-                <AlertDialogDescription>Se eliminará "{deuda.nombre}" permanentemente.</AlertDialogDescription>
+                <AlertDialogDescription>
+                  Se eliminará "{deuda.nombre}" permanentemente.
+                  {deuda.valor > deuda.saldo && (
+                    <> Se devolverán a las fuentes los abonos registrados (hasta {formatCOP(deuda.valor - deuda.saldo)}).</>
+                  )}
+                </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancelar</AlertDialogCancel>
