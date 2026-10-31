@@ -70,3 +70,43 @@ describe('Deuda.actualizarSaldo', () => {
     expect(() => deuda(100_000).actualizarSaldo(100_001)).toThrow(DomainError)
   })
 })
+
+describe('Deuda — secuencias y estado', () => {
+  it('varios pagos parciales hasta saldar la deuda la dejan Pagado', () => {
+    const d = deuda(100_000)
+
+    d.pagar(30_000)
+    expect(d.estado).toBe(EstadoDeuda.EN_PROCESO)
+    d.pagar(30_000)
+    expect(d.saldo).toBe(40_000)
+    d.pagar(40_000)
+
+    expect(d.saldo).toBe(0)
+    expect(d.estado).toBe(EstadoDeuda.PAGADO)
+    expect(() => d.pagar(1)).toThrow('La deuda ya está pagada')
+  })
+
+  it('estaPendiente es verdadero salvo cuando la deuda está Pagado', () => {
+    expect(deuda(100_000, 100_000, EstadoDeuda.PENDIENTE).estaPendiente).toBe(true)
+    expect(deuda(100_000, 40_000, EstadoDeuda.EN_PROCESO).estaPendiente).toBe(true)
+    expect(deuda(100_000, 0, EstadoDeuda.PAGADO).estaPendiente).toBe(false)
+  })
+
+  it('un saldo rechazado no modifica la deuda', () => {
+    const d = deuda(100_000, 60_000, EstadoDeuda.EN_PROCESO)
+
+    expect(() => d.actualizarSaldo(-1)).toThrow(DomainError)
+    expect(() => d.actualizarSaldo(100_001)).toThrow(DomainError)
+
+    expect(d.saldo).toBe(60_000)
+    expect(d.estado).toBe(EstadoDeuda.EN_PROCESO)
+  })
+
+  it('actualizarSaldo con el valor exacto deja la deuda Pendiente', () => {
+    const d = deuda(100_000, 60_000, EstadoDeuda.EN_PROCESO)
+
+    d.actualizarSaldo(100_000)
+
+    expect(d.estado).toBe(EstadoDeuda.PENDIENTE)
+  })
+})

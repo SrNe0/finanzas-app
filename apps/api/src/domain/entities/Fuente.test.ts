@@ -57,3 +57,36 @@ describe('Fuente.debitar', () => {
     expect(f.saldo).toBe(10_000)
   })
 })
+
+describe('Fuente — secuencias', () => {
+  it('conserva sus datos al construirse', () => {
+    const f = new Fuente('f9', 'Bono comida', TipoFuente.BONO, 25_000)
+
+    expect(f).toMatchObject({ id: 'f9', nombre: 'Bono comida', tipo: TipoFuente.BONO, saldo: 25_000 })
+  })
+
+  it('depositar y debitar se combinan sobre el mismo saldo', () => {
+    const f = fuente(10_000)
+
+    f.depositar(5_000)
+    f.debitar(12_000)
+    f.depositar(1_000)
+
+    expect(f.saldo).toBe(4_000)
+  })
+
+  it('el mensaje de fondos insuficientes incluye la fuente, el saldo y el monto requerido', () => {
+    const f = fuente(1_000)
+
+    expect(() => f.debitar(5_000)).toThrow(/Cuenta.*1000.*5000/)
+  })
+
+  it('después de un débito rechazado se puede seguir operando', () => {
+    const f = fuente(1_000)
+
+    expect(() => f.debitar(2_000)).toThrow(InsufficientFundsError)
+    f.debitar(1_000)
+
+    expect(f.saldo).toBe(0)
+  })
+})
