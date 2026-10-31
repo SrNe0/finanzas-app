@@ -24,7 +24,8 @@ export class ObtenerResumenMensualUseCase {
     ])
 
     const totalDeudas = deudas.reduce((s, d) => s + d.valor, 0)
-    const totalDeudasPagadas = deudas.filter(d => !d.estaPendiente).reduce((s, d) => s + d.valor, 0)
+    // Lo abonado de cada deuda (valor - saldo): incluye las pagadas por completo y los abonos parciales
+    const totalDeudasPagadas = deudas.reduce((s, d) => s + (d.valor - d.saldo), 0)
     const totalGastos = gastos.reduce((s, g) => s + g.monto, 0)
     const totalDisponible = fuentes.reduce((s, f) => s + f.saldo, 0)
     const totalIngresos = movimientos
