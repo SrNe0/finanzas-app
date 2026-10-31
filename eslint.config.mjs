@@ -11,7 +11,7 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
 
   {
-    files: ['apps/api/**/*.ts'],
+    files: ['apps/api/**/*.{ts,mjs}'],
     languageOptions: { globals: globals.node },
   },
   {
