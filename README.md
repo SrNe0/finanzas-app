@@ -98,6 +98,7 @@ src/
 |---|---|
 | `pnpm dev` | Arranca API (3001) + Web (5173) en paralelo |
 | `pnpm build` | Compila ambas apps |
+| `pnpm --filter api test` | Ejecuta los tests de la API (Vitest) |
 | `pnpm db:migrate` | Migra la base de datos (incluye seed) |
 | `pnpm db:seed` | Carga los datos de ejemplo |
 | `pnpm db:studio` | Abre Prisma Studio |
