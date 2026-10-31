@@ -1,11 +1,13 @@
 # Finanzas Personales
 
-App web de finanzas personales de uso local. Sin autenticación, corre completamente en tu equipo.
+App web de finanzas personales para llevar las deudas, los gastos y el dinero disponible del mes. Los montos se manejan en pesos colombianos (COP, enteros sin decimales) y las fechas en zona horaria America/Bogota.
+
+> **Uso local:** la app no tiene autenticación y guarda todo en una base SQLite en tu equipo. No la expongas a internet ni a una red que no sea de confianza.
 
 ## Requisitos
 
 - Node.js 22+
-- pnpm
+- pnpm 11 (el repo declara la versión en `packageManager`; con Corepack basta `corepack enable`)
 
 ## Instalación
 
@@ -19,6 +21,8 @@ pnpm install
 pnpm db:migrate   # Crea la base de datos SQLite y ejecuta el seed
 ```
 
+La base se crea en `apps/data/finanzas.db` y no se versiona.
+
 ## Desarrollo
 
 ```bash
@@ -27,6 +31,12 @@ pnpm dev
 
 - API: http://localhost:3001
 - Web: http://localhost:5173
+
+## Tests
+
+```bash
+pnpm --filter api test   # Vitest, contra una SQLite temporal
+```
 
 ## Features
 
@@ -45,10 +55,9 @@ finanzas-app/
   apps/
     api/          Backend Fastify + TypeScript
     web/          Frontend React + Vite
+    data/         Base de datos SQLite local (no versionada)
   packages/
     shared-types/ DTOs y enums compartidos
-  data/
-    finanzas.db   Base de datos SQLite
 ```
 
 ### Backend — Clean Architecture
@@ -91,6 +100,7 @@ src/
 | Forms | React Hook Form + Zod |
 | Gráficas | Recharts |
 | UI components | shadcn/ui |
+| Tests | Vitest |
 
 ## Scripts
 
@@ -102,3 +112,7 @@ src/
 | `pnpm db:migrate` | Migra la base de datos (incluye seed) |
 | `pnpm db:seed` | Carga los datos de ejemplo |
 | `pnpm db:studio` | Abre Prisma Studio |
+
+## Licencia
+
+[MIT](LICENSE)
