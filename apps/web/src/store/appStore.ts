@@ -32,6 +32,13 @@ export const useAppStore = create<AppStore>()(
     }),
     {
       name: 'finanzas-app-store',
+      // Solo se guarda el tema: el mes activo siempre arranca en el mes actual.
+      partialize: (state) => ({ theme: state.theme }),
+      // Descarta un mes activo guardado por versiones anteriores.
+      merge: (persisted, current) => ({
+        ...current,
+        theme: (persisted as { theme?: 'dark' | 'light' } | undefined)?.theme ?? current.theme,
+      }),
       onRehydrateStorage: () => (state) => {
         if (state) applyTheme(state.theme)
       },
