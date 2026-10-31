@@ -1,5 +1,6 @@
 import { TipoFuente } from 'shared-types'
 import { InsufficientFundsError } from '../errors/DomainError'
+import { validarMonto } from '../validaciones'
 
 export class Fuente {
   constructor(
@@ -10,10 +11,12 @@ export class Fuente {
   ) {}
 
   depositar(monto: number): void {
+    validarMonto(monto)
     this.saldo += monto
   }
 
   debitar(monto: number): void {
+    validarMonto(monto)
     if (monto > this.saldo) throw new InsufficientFundsError(this.nombre, monto, this.saldo)
     this.saldo -= monto
   }
