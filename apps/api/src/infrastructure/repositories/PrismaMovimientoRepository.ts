@@ -24,6 +24,7 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
         tipo: movimiento.tipo,
         fuenteId: movimiento.fuenteId,
         deudaId: movimiento.deudaId,
+        gastoId: movimiento.gastoId,
         descripcion: movimiento.descripcion,
         monto: movimiento.monto,
         fecha: movimiento.fecha,
@@ -38,6 +39,15 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
       orderBy: { fecha: 'desc' },
     })
     return records.map(r => MovimientoMapper.toDomain(r as any))
+  }
+
+  async findByGastoId(gastoId: string): Promise<Movimiento | null> {
+    const record = await this.prisma.movimiento.findFirst({ where: { gastoId } })
+    return record ? MovimientoMapper.toDomain(record as any) : null
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.movimiento.delete({ where: { id } })
   }
 
   async findByMes(mes: string): Promise<Movimiento[]> {

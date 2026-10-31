@@ -6,6 +6,7 @@ type PrismaMovimiento = {
   tipo: string
   fuenteId: string | null
   deudaId: string | null
+  gastoId: string | null
   descripcion: string | null
   monto: number
   fecha: Date
@@ -20,7 +21,8 @@ export class MovimientoMapper {
       record.deudaId,
       record.descripcion,
       record.monto,
-      record.fecha
+      record.fecha,
+      record.gastoId
     )
   }
 
