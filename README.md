@@ -1,6 +1,7 @@
 # Finanzas Personales
 
 [![CI](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml/badge.svg)](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml)
+[![Última versión](https://img.shields.io/github/v/release/SrNe0/finanzas-app?label=versi%C3%B3n)](https://github.com/SrNe0/finanzas-app/releases)
 [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%E2%89%A5%2022-339933)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6)
