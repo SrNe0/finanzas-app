@@ -31,7 +31,7 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
         fecha: movimiento.fecha,
       },
     })
-    return MovimientoMapper.toDomain(record as any)
+    return MovimientoMapper.toDomain(record)
   }
 
   async findByFuenteId(fuenteId: string): Promise<Movimiento[]> {
@@ -39,19 +39,19 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
       where: { fuenteId },
       orderBy: { fecha: 'desc' },
     })
-    return records.map(r => MovimientoMapper.toDomain(r as any))
+    return records.map(r => MovimientoMapper.toDomain(r))
   }
 
   async findByGastoId(gastoId: string): Promise<Movimiento | null> {
     const record = await this.prisma.movimiento.findFirst({ where: { gastoId } })
-    return record ? MovimientoMapper.toDomain(record as any) : null
+    return record ? MovimientoMapper.toDomain(record) : null
   }
 
   async findPagosByDeudaId(deudaId: string): Promise<Movimiento[]> {
     const records = await this.prisma.movimiento.findMany({
       where: { deudaId, tipo: TipoMovimiento.PAGO_DEUDA },
     })
-    return records.map(r => MovimientoMapper.toDomain(r as any))
+    return records.map(r => MovimientoMapper.toDomain(r))
   }
 
   async delete(id: string): Promise<void> {
@@ -64,6 +64,6 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
       where: { fecha: { gte: start, lt: end } },
       orderBy: { fecha: 'desc' },
     })
-    return records.map(r => MovimientoMapper.toDomain(r as any))
+    return records.map(r => MovimientoMapper.toDomain(r))
   }
 }

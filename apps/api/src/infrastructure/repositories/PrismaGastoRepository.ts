@@ -8,12 +8,12 @@ export class PrismaGastoRepository implements IGastoRepository {
 
   async findById(id: string): Promise<Gasto | null> {
     const record = await this.prisma.gasto.findUnique({ where: { id } })
-    return record ? GastoMapper.toDomain(record as any) : null
+    return record ? GastoMapper.toDomain(record) : null
   }
 
   async findByMes(mes: string): Promise<Gasto[]> {
     const records = await this.prisma.gasto.findMany({ where: { mes }, orderBy: { fecha: 'desc' } })
-    return records.map(r => GastoMapper.toDomain(r as any))
+    return records.map(r => GastoMapper.toDomain(r))
   }
 
   async save(gasto: Gasto): Promise<Gasto> {
@@ -27,7 +27,7 @@ export class PrismaGastoRepository implements IGastoRepository {
         fecha: gasto.fecha,
       },
     })
-    return GastoMapper.toDomain(record as any)
+    return GastoMapper.toDomain(record)
   }
 
   async delete(id: string): Promise<void> {

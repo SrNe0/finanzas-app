@@ -25,6 +25,25 @@ export default tseslint.config(
   },
 
   {
+    // Arquitectura: domain y application no dependen de infrastructure, de interface ni de Prisma
+    files: ['apps/api/src/domain/**/*.ts', 'apps/api/src/application/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/infrastructure/**', '**/interface/**', '**/shared/**'],
+              message: 'domain y application no pueden depender de infrastructure, interface ni del contenedor.',
+            },
+            { group: ['@prisma/client'], message: 'Prisma solo se usa en infrastructure.' },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
     // Configuraciones en CommonJS (por ejemplo tailwind.config.js)
     files: ['**/*.config.{js,cjs}'],
     languageOptions: { globals: globals.node },
@@ -35,8 +54,7 @@ export default tseslint.config(
     rules: {
       // Los componentes de shadcn/ui declaran interfaces vacías que extienden las props de HTML
       '@typescript-eslint/no-empty-object-type': ['error', { allowInterfaces: 'with-single-extends' }],
-      // Hay `as any` en repositorios y rutas; se eliminan en el refactor de mappers (#27).
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     },
   },
