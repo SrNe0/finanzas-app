@@ -1,6 +1,16 @@
 {
   "name": "finanzas-app",
   "private": true,
+  "description": "App web de finanzas personales de uso local: deudas, gastos y dinero disponible en pesos colombianos.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SrNe0/finanzas-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SrNe0/finanzas-app/issues"
+  },
+  "homepage": "https://github.com/SrNe0/finanzas-app#readme",
   "packageManager": "pnpm@11.20.0",
   "engines": {
     "node": ">=22"
