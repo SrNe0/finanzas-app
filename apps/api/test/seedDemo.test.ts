@@ -1,30 +1,31 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { PrismaClient } from '@prisma/client'
 import { EstadoDeuda, TipoMovimiento } from 'shared-types'
-import { sembrarDemo } from '../prisma/seed-demo'
+import { ResumenDemo, sembrarDemo } from '../prisma/seed-demo'
 import { crearBaseTemporal, BaseTemporal } from './helpers/baseTemporal'
 import { mesDeBogota } from './helpers/memoria'
 
 const HOY = new Date('2026-10-20T15:00:00-05:00')
 
-let base: BaseTemporal
-let prisma: PrismaClient
-
-beforeEach(async () => {
-  base = await crearBaseTemporal()
-  prisma = base.prisma
-})
-
-afterEach(async () => {
-  await base.cerrar()
-})
-
 const ENTRADAS = [TipoMovimiento.INGRESO, TipoMovimiento.TRANSFERENCIA_ENTRADA]
 
-describe('sembrarDemo', () => {
-  it('carga fuentes, deudas, gastos y movimientos', async () => {
-    const resumen = await sembrarDemo(prisma, HOY)
+// Los tests que solo leen el resultado comparten una única base sembrada: así se crea y se borra una sola vez.
+describe('sembrarDemo (datos sembrados)', () => {
+  let base: BaseTemporal
+  let prisma: PrismaClient
+  let resumen: ResumenDemo
 
+  beforeAll(async () => {
+    base = await crearBaseTemporal()
+    prisma = base.prisma
+    resumen = await sembrarDemo(prisma, HOY)
+  })
+
+  afterAll(async () => {
+    await base.cerrar()
+  })
+
+  it('carga fuentes, deudas, gastos y movimientos', async () => {
     expect(await prisma.fuente.count()).toBe(3)
     expect(await prisma.deuda.count()).toBeGreaterThanOrEqual(6)
     expect(await prisma.gasto.count()).toBeGreaterThanOrEqual(10)
@@ -33,8 +34,6 @@ describe('sembrarDemo', () => {
   })
 
   it('los saldos de las fuentes coinciden con sus movimientos y ninguno es negativo', async () => {
-    await sembrarDemo(prisma, HOY)
-
     for (const fuente of await prisma.fuente.findMany()) {
       const movimientos = await prisma.movimiento.findMany({ where: { fuenteId: fuente.id } })
       const esperado = movimientos.reduce(
@@ -47,8 +46,6 @@ describe('sembrarDemo', () => {
   })
 
   it('los estados de las deudas son coherentes con su saldo', async () => {
-    await sembrarDemo(prisma, HOY)
-
     for (const deuda of await prisma.deuda.findMany()) {
       if (deuda.estado === EstadoDeuda.PAGADO) expect(deuda.saldo, deuda.nombre).toBe(0)
       else if (deuda.estado === EstadoDeuda.PENDIENTE) expect(deuda.saldo, deuda.nombre).toBe(deuda.valor)
@@ -60,8 +57,6 @@ describe('sembrarDemo', () => {
   })
 
   it('hay deudas pagadas, con abonos, pendientes y una arrastrada del mes anterior', async () => {
-    await sembrarDemo(prisma, HOY)
-
     const deudas = await prisma.deuda.findMany()
     const estados = new Set(deudas.map(d => d.estado))
     expect(estados).toEqual(new Set([EstadoDeuda.PAGADO, EstadoDeuda.EN_PROCESO, EstadoDeuda.PENDIENTE]))
@@ -69,8 +64,6 @@ describe('sembrarDemo', () => {
   })
 
   it('todo ocurre en el mes actual o en el anterior y nada queda en el futuro (hora de Bogotá)', async () => {
-    await sembrarDemo(prisma, HOY)
-
     const permitidos = new Set(['2026-09', '2026-10'])
     for (const m of await prisma.movimiento.findMany()) {
       expect(permitidos.has(mesDeBogota(m.fecha))).toBe(true)
@@ -81,6 +74,21 @@ describe('sembrarDemo', () => {
       expect(mesDeBogota(g.fecha)).toBe(g.mes)
     }
     expect(await prisma.deuda.count({ where: { mes: { notIn: [...permitidos] } } })).toBe(0)
+  })
+})
+
+// Estos tests parten de una base distinta (con una fuente previa o con datos), así que cada uno tiene la suya.
+describe('sembrarDemo (bases propias)', () => {
+  let base: BaseTemporal
+  let prisma: PrismaClient
+
+  beforeEach(async () => {
+    base = await crearBaseTemporal()
+    prisma = base.prisma
+  })
+
+  afterEach(async () => {
+    await base.cerrar()
   })
 
   it('reutiliza las fuentes vacías que crea el seed normal', async () => {
