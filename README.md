@@ -122,6 +122,9 @@ src/
 | `pnpm build` | Compila ambas apps |
 | `pnpm --filter api test` | Ejecuta los tests de la API (Vitest) |
 | `pnpm --filter web test` | Ejecuta los tests de la web (Vitest + Testing Library) |
+| `pnpm lint` | Revisa el código con ESLint |
+| `pnpm typecheck` | Revisa los tipos de la API (incluidos sus tests) y de la web |
+| `pnpm format` / `pnpm format:check` | Formatea el código con Prettier / comprueba el formato |
 | `pnpm db:migrate` | Migra la base de datos (incluye seed) |
 | `pnpm db:seed` | Carga los datos de ejemplo |
 | `pnpm db:studio` | Abre Prisma Studio |
