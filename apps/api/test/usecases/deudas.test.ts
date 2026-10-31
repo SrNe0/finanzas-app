@@ -16,9 +16,19 @@ beforeEach(() => {
 
 describe('CrearDeuda', () => {
   it('crea la deuda Pendiente con el saldo igual al valor', async () => {
-    const dto = await new CrearDeudaUseCase(m.repos.deudas).execute({ nombre: 'Tarjeta', valor: 100_000, mes: '2026-10' })
+    const dto = await new CrearDeudaUseCase(m.repos.deudas).execute({
+      nombre: 'Tarjeta',
+      valor: 100_000,
+      mes: '2026-10',
+    })
 
-    expect(dto).toMatchObject({ nombre: 'Tarjeta', valor: 100_000, saldo: 100_000, estado: EstadoDeuda.PENDIENTE, mes: '2026-10' })
+    expect(dto).toMatchObject({
+      nombre: 'Tarjeta',
+      valor: 100_000,
+      saldo: 100_000,
+      estado: EstadoDeuda.PENDIENTE,
+      mes: '2026-10',
+    })
     expect(m.datos.deudas.get(dto.id)).toBeDefined()
   })
 })
@@ -32,12 +42,15 @@ describe('ListarDeudasPorMes', () => {
 
     const resultado = await new ListarDeudasPorMesUseCase(m.repos.deudas).execute('2026-10')
 
-    expect(resultado.delMes.map((d) => d.id)).toEqual([delMes.id])
-    expect(resultado.arrastradas.map((d) => d.id)).toEqual([arrastrada.id])
+    expect(resultado.delMes.map(d => d.id)).toEqual([delMes.id])
+    expect(resultado.arrastradas.map(d => d.id)).toEqual([arrastrada.id])
   })
 
   it('sin deudas devuelve listas vacías', async () => {
-    expect(await new ListarDeudasPorMesUseCase(m.repos.deudas).execute('2026-10')).toEqual({ delMes: [], arrastradas: [] })
+    expect(await new ListarDeudasPorMesUseCase(m.repos.deudas).execute('2026-10')).toEqual({
+      delMes: [],
+      arrastradas: [],
+    })
   })
 })
 
@@ -46,13 +59,22 @@ describe('PagarDeuda', () => {
     const fuente = m.agregarFuente('Cuenta', 150_000)
     const deuda = m.agregarDeuda(100_000)
 
-    const resultado = await new PagarDeudaUseCase(m.uow).execute({ deudaId: deuda.id, fuenteId: fuente.id, monto: 40_000 })
+    const resultado = await new PagarDeudaUseCase(m.uow).execute({
+      deudaId: deuda.id,
+      fuenteId: fuente.id,
+      monto: 40_000,
+    })
 
     expect(resultado.deuda).toMatchObject({ saldo: 60_000, estado: EstadoDeuda.EN_PROCESO })
     expect(resultado.fuente.saldo).toBe(110_000)
     const movimientos = [...m.datos.movimientos.values()]
     expect(movimientos).toHaveLength(1)
-    expect(movimientos[0]).toMatchObject({ tipo: TipoMovimiento.PAGO_DEUDA, monto: 40_000, fuenteId: fuente.id, deudaId: deuda.id })
+    expect(movimientos[0]).toMatchObject({
+      tipo: TipoMovimiento.PAGO_DEUDA,
+      monto: 40_000,
+      fuenteId: fuente.id,
+      deudaId: deuda.id,
+    })
   })
 
   it('sin monto paga todo el saldo pendiente', async () => {
@@ -78,9 +100,9 @@ describe('PagarDeuda', () => {
     const fuente = m.agregarFuente('Cuenta', 10_000)
     const deuda = m.agregarDeuda(100_000)
 
-    await expect(new PagarDeudaUseCase(m.uow).execute({ deudaId: deuda.id, fuenteId: fuente.id, monto: 50_000 })).rejects.toBeInstanceOf(
-      InsufficientFundsError
-    )
+    await expect(
+      new PagarDeudaUseCase(m.uow).execute({ deudaId: deuda.id, fuenteId: fuente.id, monto: 50_000 })
+    ).rejects.toBeInstanceOf(InsufficientFundsError)
 
     expect(m.datos.fuentes.get(fuente.id)?.saldo).toBe(10_000)
     expect(m.datos.deudas.get(deuda.id)?.saldo).toBe(100_000)
@@ -93,7 +115,9 @@ describe('PagarDeuda', () => {
     const pagada = m.agregarDeuda(100_000, 0, EstadoDeuda.PAGADO)
     const caso = new PagarDeudaUseCase(m.uow)
 
-    await expect(caso.execute({ deudaId: deuda.id, fuenteId: fuente.id, monto: 100_001 })).rejects.toBeInstanceOf(DomainError)
+    await expect(caso.execute({ deudaId: deuda.id, fuenteId: fuente.id, monto: 100_001 })).rejects.toBeInstanceOf(
+      DomainError
+    )
     await expect(caso.execute({ deudaId: pagada.id, fuenteId: fuente.id })).rejects.toBeInstanceOf(DomainError)
     expect(m.datos.movimientos.size).toBe(0)
   })
@@ -114,7 +138,11 @@ describe('ActualizarSaldoDeuda', () => {
     const fuente = m.agregarFuente('Cuenta', 80_000)
     const deuda = m.agregarDeuda(100_000)
 
-    const resultado = await new ActualizarSaldoDeudaUseCase(m.uow).execute({ deudaId: deuda.id, nuevoSaldo: 70_000, fuenteId: fuente.id })
+    const resultado = await new ActualizarSaldoDeudaUseCase(m.uow).execute({
+      deudaId: deuda.id,
+      nuevoSaldo: 70_000,
+      fuenteId: fuente.id,
+    })
 
     expect(resultado.deuda).toMatchObject({ saldo: 70_000, estado: EstadoDeuda.EN_PROCESO })
     expect(resultado.fuente?.saldo).toBe(50_000)
@@ -135,7 +163,9 @@ describe('ActualizarSaldoDeuda', () => {
     const caso = new ActualizarSaldoDeudaUseCase(m.uow)
 
     await expect(caso.execute({ deudaId: 'no-existe', nombre: 'x' })).rejects.toBeInstanceOf(NotFoundError)
-    await expect(caso.execute({ deudaId: deuda.id, nuevoSaldo: 10, fuenteId: 'no-existe' })).rejects.toBeInstanceOf(NotFoundError)
+    await expect(caso.execute({ deudaId: deuda.id, nuevoSaldo: 10, fuenteId: 'no-existe' })).rejects.toBeInstanceOf(
+      NotFoundError
+    )
   })
 })
 

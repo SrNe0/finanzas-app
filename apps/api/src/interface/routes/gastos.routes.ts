@@ -12,7 +12,7 @@ const RegistrarGastoSchema = z.object({
 })
 
 export async function gastosRoutes(fastify: FastifyInstance, container: Container) {
-  fastify.get('/gastos', async (req) => {
+  fastify.get('/gastos', async req => {
     const { mes } = z.object({ mes: MesSchema }).parse(req.query)
     return container.gastos.listar.execute(mes)
   })

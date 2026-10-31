@@ -41,7 +41,7 @@ describe('Deuda.pagar', () => {
     expect(() => d.pagar(1)).toThrow('La deuda ya está pagada')
   })
 
-  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja la deuda igual', (monto) => {
+  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja la deuda igual', monto => {
     const d = deuda(100_000)
 
     expect(() => d.pagar(monto)).toThrow(DomainError)

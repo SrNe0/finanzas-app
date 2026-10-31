@@ -17,7 +17,7 @@ export class ActualizarSaldoDeudaUseCase {
   constructor(private uow: IUnitOfWork) {}
 
   async execute(input: ActualizarDeudaInput): Promise<{ deuda: DeudaDTO; fuente?: FuenteDTO }> {
-    return this.uow.run(async (repos) => {
+    return this.uow.run(async repos => {
       const deuda = await repos.deudas.findById(input.deudaId)
       if (!deuda) throw new NotFoundError('Deuda', input.deudaId)
 
@@ -44,7 +44,15 @@ export class ActualizarSaldoDeudaUseCase {
           await repos.fuentes.update(f)
           const concepto = nuevoSaldo === 0 ? 'Pago' : 'Pago parcial'
           await repos.movimientos.save(
-            new Movimiento(null, TipoMovimiento.PAGO_DEUDA, f.id, deuda.id, `${concepto} ${deuda.nombre}`, diferencia, new Date())
+            new Movimiento(
+              null,
+              TipoMovimiento.PAGO_DEUDA,
+              f.id,
+              deuda.id,
+              `${concepto} ${deuda.nombre}`,
+              diferencia,
+              new Date()
+            )
           )
           fuente = FuenteMapper.toDTO(f)
         }

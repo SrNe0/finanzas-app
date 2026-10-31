@@ -5,7 +5,17 @@ import { getTooltipProps } from '@/shared/lib/chartConfig'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/shared/components/ui/alert-dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/shared/components/ui/alert-dialog'
 import { formatCOP } from '@/shared/lib/utils'
 import { useGastos, useEliminarGasto } from '../hooks/useGastos'
 import { AgregarGastoModal } from './AgregarGastoModal'
@@ -13,7 +23,9 @@ import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
 
-interface Props { mes: string }
+interface Props {
+  mes: string
+}
 
 const COLORS = ['#58A6FF', '#3FB950', '#F85149', '#D29922', '#8B949E', '#79C0FF', '#56D364', '#FFA657']
 
@@ -34,14 +46,23 @@ export function GastosTable({ mes }: Props) {
     value: gastos.filter(g => g.categoria === cat).reduce((s, g) => s + g.monto, 0),
   }))
 
-  if (isLoading) return <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-12" />)}</div>
+  if (isLoading)
+    return (
+      <div className="space-y-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Skeleton key={i} className="h-12" />
+        ))}
+      </div>
+    )
 
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-base font-semibold text-text-primary">Gastos</h2>
-          <p className="text-sm text-text-secondary">Total: <span className="font-mono text-accent-red">{formatCOP(total)}</span></p>
+          <p className="text-sm text-text-secondary">
+            Total: <span className="font-mono text-accent-red">{formatCOP(total)}</span>
+          </p>
         </div>
         <Button size="sm" onClick={() => setAgregarOpen(true)}>
           <Plus className="h-4 w-4 mr-1" /> Agregar gasto
@@ -73,7 +94,9 @@ export function GastosTable({ mes }: Props) {
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie data={porCategoria} cx="50%" cy="50%" outerRadius={60} dataKey="value">
-                  {porCategoria.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  {porCategoria.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
                 </Pie>
                 <Tooltip
                   formatter={(v: number) => formatCOP(v)}
@@ -105,7 +128,9 @@ export function GastosTable({ mes }: Props) {
               {filtrados.map(g => (
                 <tr key={g.id} className="border-b border-border hover:bg-surface/50">
                   <td className="py-3 px-4 text-sm text-text-primary">{g.descripcion}</td>
-                  <td className="py-3 px-4"><Badge variant="outline">{g.categoria}</Badge></td>
+                  <td className="py-3 px-4">
+                    <Badge variant="outline">{g.categoria}</Badge>
+                  </td>
                   <td className="py-3 px-4 text-xs text-text-secondary">
                     {format(new Date(g.fecha), 'd MMM', { locale: es })}
                   </td>
@@ -113,14 +138,20 @@ export function GastosTable({ mes }: Props) {
                   <td className="py-3 px-4">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 text-text-secondary hover:text-accent-red">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-text-secondary hover:text-accent-red"
+                        >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
                           <AlertDialogTitle>¿Eliminar gasto?</AlertDialogTitle>
-                          <AlertDialogDescription>Se eliminará "{g.descripcion}" permanentemente.</AlertDialogDescription>
+                          <AlertDialogDescription>
+                            Se eliminará "{g.descripcion}" permanentemente.
+                          </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancelar</AlertDialogCancel>

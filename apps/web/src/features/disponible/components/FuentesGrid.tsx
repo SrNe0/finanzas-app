@@ -27,7 +27,13 @@ export function FuentesGrid() {
   const totalDisponible = fuentes.reduce((s, f) => s + f.saldo, 0)
 
   if (isLoading) {
-    return <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-32" />)}</div>
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-32" />
+        ))}
+      </div>
+    )
   }
 
   return (
@@ -52,14 +58,22 @@ export function FuentesGrid() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {fuentes.map(f => (
-          <div key={f.id} className="bg-surface border border-border rounded-lg p-4 hover:border-text-secondary transition-colors">
+          <div
+            key={f.id}
+            className="bg-surface border border-border rounded-lg p-4 hover:border-text-secondary transition-colors"
+          >
             <div className="flex items-start justify-between">
               <div>
                 <div className="text-lg">{TIPO_ICONS[f.tipo] ?? '💼'}</div>
                 <h3 className="text-sm font-medium text-text-primary mt-1">{f.nombre}</h3>
                 <p className="text-xs text-text-secondary capitalize">{f.tipo}</p>
               </div>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-text-secondary" onClick={() => setHistorialFuente(f)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-text-secondary"
+                onClick={() => setHistorialFuente(f)}
+              >
                 <History className="h-3.5 w-3.5" />
               </Button>
             </div>

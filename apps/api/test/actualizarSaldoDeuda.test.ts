@@ -53,7 +53,12 @@ describe('ActualizarSaldoDeuda — marcar como Pagado', () => {
     expect(deudaDb.estado).toBe(EstadoDeuda.PAGADO)
     const movimientos = await prisma.movimiento.findMany()
     expect(movimientos).toHaveLength(1)
-    expect(movimientos[0]).toMatchObject({ tipo: TipoMovimiento.PAGO_DEUDA, monto: 100_000, fuenteId: fuente.id, deudaId: deuda.id })
+    expect(movimientos[0]).toMatchObject({
+      tipo: TipoMovimiento.PAGO_DEUDA,
+      monto: 100_000,
+      fuenteId: fuente.id,
+      deudaId: deuda.id,
+    })
   })
 
   it('después de un abono parcial debita solo lo que faltaba', async () => {
@@ -137,27 +142,27 @@ describe('ActualizarSaldoDeuda — estados coherentes', () => {
   it('rechaza Pendiente en una deuda con abonos', async () => {
     const deuda = await crearDeuda(100_000, 60_000, EstadoDeuda.EN_PROCESO)
 
-    await expect(
-      actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.PENDIENTE })
-    ).rejects.toBeInstanceOf(DomainError)
+    await expect(actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.PENDIENTE })).rejects.toBeInstanceOf(
+      DomainError
+    )
     expect((await deudaDe(deuda.id)).estado).toBe(EstadoDeuda.EN_PROCESO)
   })
 
   it('rechaza Pendiente en una deuda pagada (saldo 0)', async () => {
     const deuda = await crearDeuda(100_000, 0, EstadoDeuda.PAGADO)
 
-    await expect(
-      actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.PENDIENTE })
-    ).rejects.toBeInstanceOf(DomainError)
+    await expect(actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.PENDIENTE })).rejects.toBeInstanceOf(
+      DomainError
+    )
     expect((await deudaDe(deuda.id)).estado).toBe(EstadoDeuda.PAGADO)
   })
 
   it('rechaza En proceso en una deuda sin abonos', async () => {
     const deuda = await crearDeuda(100_000)
 
-    await expect(
-      actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.EN_PROCESO })
-    ).rejects.toBeInstanceOf(DomainError)
+    await expect(actualizar.execute({ deudaId: deuda.id, nuevoEstado: EstadoDeuda.EN_PROCESO })).rejects.toBeInstanceOf(
+      DomainError
+    )
     expect((await deudaDe(deuda.id)).estado).toBe(EstadoDeuda.PENDIENTE)
   })
 
@@ -176,7 +181,12 @@ describe('ActualizarSaldoDeuda — estados coherentes', () => {
     const deuda = await crearDeuda(100_000)
 
     await expect(
-      actualizar.execute({ deudaId: deuda.id, nuevoSaldo: 70_000, nuevoEstado: EstadoDeuda.PENDIENTE, fuenteId: fuente.id })
+      actualizar.execute({
+        deudaId: deuda.id,
+        nuevoSaldo: 70_000,
+        nuevoEstado: EstadoDeuda.PENDIENTE,
+        fuenteId: fuente.id,
+      })
     ).rejects.toBeInstanceOf(DomainError)
 
     expect(await saldoDe(fuente.id)).toBe(80_000)

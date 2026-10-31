@@ -10,7 +10,10 @@ export function useCrearFuente() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: fuentesApi.crear,
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['fuentes'] }); toast.success('Fuente creada') },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['fuentes'] })
+      toast.success('Fuente creada')
+    },
     onError: (e: Error) => toast.error(e.message),
   })
 }

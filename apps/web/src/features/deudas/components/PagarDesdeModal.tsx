@@ -35,7 +35,9 @@ export function PagarDesdeModal({ open, onClose, onConfirm, fuentes, monto, load
         <DialogHeader>
           <DialogTitle>¿De dónde salió la plata?</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-text-secondary mb-4">Monto: <span className="font-mono text-text-primary">{formatCOP(monto)}</span></p>
+        <p className="text-sm text-text-secondary mb-4">
+          Monto: <span className="font-mono text-text-primary">{formatCOP(monto)}</span>
+        </p>
         <div className="space-y-2">
           {fuentes.map(f => (
             <button
@@ -57,7 +59,9 @@ export function PagarDesdeModal({ open, onClose, onConfirm, fuentes, monto, load
           ))}
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+          <Button variant="outline" onClick={handleClose}>
+            Cancelar
+          </Button>
           <Button disabled={!selected || saldoInsuficiente || loading} onClick={handleConfirm}>
             {loading ? 'Procesando...' : 'Confirmar'}
           </Button>

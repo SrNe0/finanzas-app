@@ -9,7 +9,7 @@ export class PrismaUnitOfWork implements IUnitOfWork {
   constructor(private prisma: PrismaClient) {}
 
   run<T>(work: (repos: Repos) => Promise<T>): Promise<T> {
-    return this.prisma.$transaction(async (tx) =>
+    return this.prisma.$transaction(async tx =>
       work({
         deudas: new PrismaDeudaRepository(tx),
         fuentes: new PrismaFuenteRepository(tx),
