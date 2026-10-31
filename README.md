@@ -23,7 +23,9 @@ pnpm install
 pnpm db:migrate   # Crea la base de datos SQLite y ejecuta el seed
 ```
 
-La base se crea en `apps/data/finanzas.db` y no se versiona.
+La URL de la base se lee de la variable `DATABASE_URL`, definida en `apps/api/.env`. Ese archivo no se versiona y se crea solo
+a partir de [`apps/api/.env.example`](apps/api/.env.example) al instalar o al ejecutar `pnpm dev` o `pnpm db:*`. Por defecto la base
+queda en `apps/data/finanzas.db` (tampoco se versiona); para usar otra ruta, edita `apps/api/.env`.
 
 ## Desarrollo
 
