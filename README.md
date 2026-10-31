@@ -4,7 +4,7 @@ App web de finanzas personales de uso local. Sin autenticación, corre completam
 
 ## Requisitos
 
-- Node.js 20+
+- Node.js 22+
 - pnpm
 
 ## Instalación
