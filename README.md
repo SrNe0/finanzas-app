@@ -36,6 +36,7 @@ pnpm dev
 
 ```bash
 pnpm --filter api test   # Vitest, contra una SQLite temporal
+pnpm --filter web test   # Vitest + Testing Library (jsdom)
 ```
 
 ## Features
@@ -120,6 +121,7 @@ src/
 | `pnpm dev` | Arranca API (3001) + Web (5173) en paralelo |
 | `pnpm build` | Compila ambas apps |
 | `pnpm --filter api test` | Ejecuta los tests de la API (Vitest) |
+| `pnpm --filter web test` | Ejecuta los tests de la web (Vitest + Testing Library) |
 | `pnpm db:migrate` | Migra la base de datos (incluye seed) |
 | `pnpm db:seed` | Carga los datos de ejemplo |
 | `pnpm db:studio` | Abre Prisma Studio |
