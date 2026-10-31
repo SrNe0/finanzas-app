@@ -47,7 +47,7 @@ export function DeudasTable({ mes }: Props) {
       {total === 0 ? (
         <div className="text-center py-12 text-text-secondary text-sm">Sin deudas para este mes</div>
       ) : (
-        <div className="rounded-lg border border-border overflow-hidden">
+        <div className="rounded-lg border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-surface">

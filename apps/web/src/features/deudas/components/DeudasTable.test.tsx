@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { EstadoDeuda } from 'shared-types'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
@@ -61,5 +62,28 @@ describe('DeudasTable', () => {
 
     expect(await screen.findByText('Sin deudas para este mes')).toBeTruthy()
     expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('con deudas, la tabla se desplaza horizontalmente en pantallas pequeñas en vez de recortarse', async () => {
+    vi.mocked(deudasApi.listar).mockResolvedValue({
+      delMes: [
+        {
+          id: 'd1',
+          nombre: 'Tarjeta',
+          valor: 100_000,
+          saldo: 100_000,
+          estado: EstadoDeuda.PENDIENTE,
+          mes: '2026-10',
+          creadoEn: '2026-10-01T00:00:00.000Z',
+        },
+      ],
+      arrastradas: [],
+    })
+
+    renderizar()
+
+    const contenedor = (await screen.findByRole('table')).parentElement
+    expect(contenedor?.className).toContain('overflow-x-auto')
+    expect(contenedor?.className).not.toContain('overflow-hidden')
   })
 })

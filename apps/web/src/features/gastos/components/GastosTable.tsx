@@ -116,7 +116,7 @@ export function GastosTable({ mes }: Props) {
       {filtrados.length === 0 ? (
         <div className="text-center py-10 text-text-secondary text-sm">Sin gastos para este mes</div>
       ) : (
-        <div className="rounded-lg border border-border overflow-hidden">
+        <div className="rounded-lg border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-surface">
