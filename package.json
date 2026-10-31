@@ -11,6 +11,7 @@
     "build": "pnpm --filter api build && pnpm --filter web build",
     "db:migrate": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma migrate dev",
     "db:seed": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma db seed",
+    "db:seed:demo": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api db:seed:demo",
     "db:studio": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma studio",
     "lint": "eslint .",
     "format": "prettier --write \"{apps,packages}/**/*.{ts,tsx,js,mts,mjs}\" \"*.mjs\"",

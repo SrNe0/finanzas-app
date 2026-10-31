@@ -10,7 +10,7 @@ import { resumenRoutes } from './interface/routes/resumen.routes'
 import { DomainError, NotFoundError } from './domain/errors/DomainError'
 
 export const HOST = '127.0.0.1'
-export const PORT = 3001
+export const PORT = Number(process.env.PORT) || 3001
 export const ORIGENES_PERMITIDOS = ['http://localhost:5173', 'http://127.0.0.1:5173']
 
 export async function buildApp(container: Container, opciones: { logger?: boolean } = {}): Promise<FastifyInstance> {
