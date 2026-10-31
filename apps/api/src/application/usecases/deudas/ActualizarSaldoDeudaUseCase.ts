@@ -2,8 +2,8 @@ import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { DomainError, NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, EstadoDeuda, DeudaDTO, FuenteDTO } from 'shared-types'
-import { DeudaMapper } from '../../../infrastructure/mappers/DeudaMapper'
-import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
+import { DeudaDtoMapper } from '../../mappers/DeudaDtoMapper'
+import { FuenteDtoMapper } from '../../mappers/FuenteDtoMapper'
 
 interface ActualizarDeudaInput {
   deudaId: string
@@ -54,7 +54,7 @@ export class ActualizarSaldoDeudaUseCase {
               new Date()
             )
           )
-          fuente = FuenteMapper.toDTO(f)
+          fuente = FuenteDtoMapper.toDTO(f)
         }
       }
 
@@ -66,7 +66,7 @@ export class ActualizarSaldoDeudaUseCase {
       }
 
       const updated = await repos.deudas.update(deuda)
-      return { deuda: DeudaMapper.toDTO(updated), fuente }
+      return { deuda: DeudaDtoMapper.toDTO(updated), fuente }
     })
   }
 }

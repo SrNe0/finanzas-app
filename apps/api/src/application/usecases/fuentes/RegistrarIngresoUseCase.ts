@@ -2,8 +2,8 @@ import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, RegistrarIngresoInput, FuenteDTO, MovimientoDTO } from 'shared-types'
-import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
-import { MovimientoMapper } from '../../../infrastructure/mappers/MovimientoMapper'
+import { FuenteDtoMapper } from '../../mappers/FuenteDtoMapper'
+import { MovimientoDtoMapper } from '../../mappers/MovimientoDtoMapper'
 
 export class RegistrarIngresoUseCase {
   constructor(private uow: IUnitOfWork) {}
@@ -31,7 +31,7 @@ export class RegistrarIngresoUseCase {
         )
       )
 
-      return { fuente: FuenteMapper.toDTO(fuente), movimiento: MovimientoMapper.toDTO(movimiento) }
+      return { fuente: FuenteDtoMapper.toDTO(fuente), movimiento: MovimientoDtoMapper.toDTO(movimiento) }
     })
   }
 }

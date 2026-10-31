@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
+import { EstadoDeuda } from 'shared-types'
 import { Container } from '../../shared/container'
 import { MesSchema } from './schemas'
 
@@ -17,7 +18,7 @@ const PagarDeudaSchema = z.object({
 const ActualizarDeudaSchema = z.object({
   nombre: z.string().min(1).optional(),
   saldo: z.number().int().min(0).optional(),
-  estado: z.enum(['Pendiente', 'En proceso', 'Pagado']).optional(),
+  estado: z.nativeEnum(EstadoDeuda).optional(),
   fuenteId: z.string().optional(),
 })
 
@@ -40,7 +41,7 @@ export async function deudasRoutes(fastify: FastifyInstance, container: Containe
       deudaId: id,
       nombre: body.nombre,
       nuevoSaldo: body.saldo,
-      nuevoEstado: body.estado as any,
+      nuevoEstado: body.estado,
       fuenteId: body.fuenteId,
     })
     return deuda

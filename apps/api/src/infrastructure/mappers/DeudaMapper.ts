@@ -1,18 +1,9 @@
+import type { Deuda as DeudaRecord } from '@prisma/client'
+import { EstadoDeuda } from 'shared-types'
 import { Deuda } from '../../domain/entities/Deuda'
-import { EstadoDeuda, DeudaDTO } from 'shared-types'
-
-type PrismaDeuda = {
-  id: string
-  nombre: string
-  valor: number
-  saldo: number
-  estado: string
-  mes: string
-  creadoEn: Date
-}
 
 export class DeudaMapper {
-  static toDomain(record: PrismaDeuda): Deuda {
+  static toDomain(record: DeudaRecord): Deuda {
     return new Deuda(
       record.id,
       record.nombre,
@@ -22,17 +13,5 @@ export class DeudaMapper {
       record.mes,
       record.creadoEn
     )
-  }
-
-  static toDTO(deuda: Deuda): DeudaDTO {
-    return {
-      id: deuda.id,
-      nombre: deuda.nombre,
-      valor: deuda.valor,
-      saldo: deuda.saldo,
-      estado: deuda.estado,
-      mes: deuda.mes,
-      creadoEn: deuda.creadoEn.toISOString(),
-    }
   }
 }
