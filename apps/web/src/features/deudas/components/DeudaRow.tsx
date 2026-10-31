@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Trash2 } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
@@ -22,7 +22,11 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
   const eliminar = useEliminarDeuda()
   const [pagarModal, setPagarModal] = useState(false)
   const [montoParaPagar, setMontoParaPagar] = useState(0)
-  const saldoRef = useRef<HTMLInputElement>(null)
+  const [saldoInput, setSaldoInput] = useState(String(deuda.saldo))
+
+  useEffect(() => {
+    setSaldoInput(String(deuda.saldo))
+  }, [deuda.saldo])
 
   const estadoColor = {
     Pendiente: 'red',
@@ -31,7 +35,7 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
   } as const
 
   const handleEstadoChange = (nuevoEstado: string) => {
-    if (nuevoEstado === 'Pagado') {
+    if (nuevoEstado === 'Pagado' && deuda.saldo > 0) {
       setMontoParaPagar(deuda.saldo)
       setPagarModal(true)
     } else {
@@ -39,22 +43,36 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
     }
   }
 
-  const handleSaldoBlur = () => {
-    const val = parseInt(saldoRef.current?.value ?? String(deuda.saldo))
-    if (isNaN(val) || val === deuda.saldo) return
+  const restaurarSaldo = () => setSaldoInput(String(deuda.saldo))
+
+  // El saldo solo se registra con una acción explícita (Enter), no al salir del campo.
+  const confirmarSaldo = () => {
+    const val = parseInt(saldoInput, 10)
+    if (isNaN(val) || val < 0 || val === deuda.saldo) {
+      restaurarSaldo()
+      return
+    }
     if (val < deuda.saldo) {
       setMontoParaPagar(deuda.saldo - val)
       setPagarModal(true)
     } else {
-      actualizar.mutate({ id: deuda.id, data: { saldo: val } })
+      actualizar.mutate({ id: deuda.id, data: { saldo: val } }, { onError: restaurarSaldo })
     }
+  }
+
+  const cancelarPago = () => {
+    setPagarModal(false)
+    restaurarSaldo()
   }
 
   const handlePagarConfirm = (fuenteId: string) => {
     if (montoParaPagar === deuda.saldo) {
-      pagar.mutate({ id: deuda.id, data: { fuenteId } })
+      pagar.mutate({ id: deuda.id, data: { fuenteId } }, { onError: restaurarSaldo })
     } else {
-      actualizar.mutate({ id: deuda.id, data: { saldo: deuda.saldo - montoParaPagar, fuenteId } })
+      actualizar.mutate(
+        { id: deuda.id, data: { saldo: deuda.saldo - montoParaPagar, fuenteId } },
+        { onError: restaurarSaldo }
+      )
     }
     setPagarModal(false)
   }
@@ -73,11 +91,16 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
         <td className="py-3 px-4 font-mono text-sm text-text-secondary">{formatCOP(deuda.valor)}</td>
         <td className="py-3 px-4">
           <input
-            ref={saldoRef}
             type="number"
-            defaultValue={deuda.saldo}
-            key={deuda.saldo}
-            onBlur={handleSaldoBlur}
+            min={0}
+            value={saldoInput}
+            onChange={e => setSaldoInput(e.target.value)}
+            onKeyDown={e => {
+              if (e.key === 'Enter') confirmarSaldo()
+              if (e.key === 'Escape') restaurarSaldo()
+            }}
+            onBlur={() => { if (!pagarModal) restaurarSaldo() }}
+            title="Enter para registrar el pago, Esc para cancelar"
             className="w-28 font-mono text-sm bg-transparent border-b border-transparent hover:border-border focus:border-accent-blue focus:outline-none text-text-primary py-0.5 px-1"
           />
         </td>
@@ -122,7 +145,7 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
       </tr>
       <PagarDesdeModal
         open={pagarModal}
-        onClose={() => setPagarModal(false)}
+        onClose={cancelarPago}
         onConfirm={handlePagarConfirm}
         fuentes={fuentes}
         monto={montoParaPagar}
