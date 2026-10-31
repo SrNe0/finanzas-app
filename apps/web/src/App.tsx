@@ -7,6 +7,7 @@ import { ResumenPageWrapper } from './pages/ResumenPageWrapper'
 import { DeudasPage } from './pages/DeudasPage'
 import { GastosPage } from './pages/GastosPage'
 import { DisponiblePage } from './pages/DisponiblePage'
+import { useAppStore } from './store/appStore'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,6 +19,8 @@ const queryClient = new QueryClient({
 })
 
 export function App() {
+  const theme = useAppStore(state => state.theme)
+
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
@@ -32,7 +35,7 @@ export function App() {
           </Routes>
         </BrowserRouter>
       </ErrorBoundary>
-      <Toaster theme="dark" position="bottom-right" richColors />
+      <Toaster theme={theme} position="bottom-right" richColors />
     </QueryClientProvider>
   )
 }
