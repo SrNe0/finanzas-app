@@ -43,7 +43,7 @@ export function buildContainer() {
     },
     gastos: {
       registrar: new RegistrarGastoUseCase(uow),
-      eliminar: new EliminarGastoUseCase(gastoRepo),
+      eliminar: new EliminarGastoUseCase(uow),
       listar: new ListarGastosPorMesUseCase(gastoRepo),
     },
     fuentes: {
