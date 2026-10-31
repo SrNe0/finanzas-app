@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Gasto } from '../../domain/entities/Gasto'
 import { IGastoRepository } from '../../domain/repositories/IGastoRepository'
 import { GastoMapper } from '../mappers/GastoMapper'
 
 export class PrismaGastoRepository implements IGastoRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient | Prisma.TransactionClient) {}
 
   async findById(id: string): Promise<Gasto | null> {
     const record = await this.prisma.gasto.findUnique({ where: { id } })

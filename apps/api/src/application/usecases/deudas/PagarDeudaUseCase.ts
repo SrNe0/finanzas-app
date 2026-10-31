@@ -1,6 +1,4 @@
-import { IDeudaRepository } from '../../../domain/repositories/IDeudaRepository'
-import { IFuenteRepository } from '../../../domain/repositories/IFuenteRepository'
-import { IMovimientoRepository } from '../../../domain/repositories/IMovimientoRepository'
+import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, DeudaDTO, FuenteDTO } from 'shared-types'
@@ -14,29 +12,27 @@ interface PagarDeudaInput {
 }
 
 export class PagarDeudaUseCase {
-  constructor(
-    private deudaRepo: IDeudaRepository,
-    private fuenteRepo: IFuenteRepository,
-    private movimientoRepo: IMovimientoRepository
-  ) {}
+  constructor(private uow: IUnitOfWork) {}
 
   async execute(input: PagarDeudaInput): Promise<{ deuda: DeudaDTO; fuente: FuenteDTO }> {
-    const deuda = await this.deudaRepo.findById(input.deudaId)
-    if (!deuda) throw new NotFoundError('Deuda', input.deudaId)
+    return this.uow.run(async (repos) => {
+      const deuda = await repos.deudas.findById(input.deudaId)
+      if (!deuda) throw new NotFoundError('Deuda', input.deudaId)
 
-    const fuente = await this.fuenteRepo.findById(input.fuenteId)
-    if (!fuente) throw new NotFoundError('Fuente', input.fuenteId)
+      const fuente = await repos.fuentes.findById(input.fuenteId)
+      if (!fuente) throw new NotFoundError('Fuente', input.fuenteId)
 
-    const monto = input.monto ?? deuda.saldo
-    fuente.debitar(monto)
-    deuda.pagar(monto)
+      const monto = input.monto ?? deuda.saldo
+      fuente.debitar(monto)
+      deuda.pagar(monto)
 
-    await this.fuenteRepo.update(fuente)
-    await this.deudaRepo.update(deuda)
-    await this.movimientoRepo.save(
-      new Movimiento(null, TipoMovimiento.PAGO_DEUDA, fuente.id, deuda.id, `Pago ${deuda.nombre}`, monto, new Date())
-    )
+      await repos.fuentes.update(fuente)
+      await repos.deudas.update(deuda)
+      await repos.movimientos.save(
+        new Movimiento(null, TipoMovimiento.PAGO_DEUDA, fuente.id, deuda.id, `Pago ${deuda.nombre}`, monto, new Date())
+      )
 
-    return { deuda: DeudaMapper.toDTO(deuda), fuente: FuenteMapper.toDTO(fuente) }
+      return { deuda: DeudaMapper.toDTO(deuda), fuente: FuenteMapper.toDTO(fuente) }
+    })
   }
 }
