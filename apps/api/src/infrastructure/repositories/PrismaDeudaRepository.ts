@@ -8,12 +8,12 @@ export class PrismaDeudaRepository implements IDeudaRepository {
 
   async findById(id: string): Promise<Deuda | null> {
     const record = await this.prisma.deuda.findUnique({ where: { id } })
-    return record ? DeudaMapper.toDomain(record as any) : null
+    return record ? DeudaMapper.toDomain(record) : null
   }
 
   async findByMes(mes: string): Promise<Deuda[]> {
     const records = await this.prisma.deuda.findMany({ where: { mes }, orderBy: { creadoEn: 'desc' } })
-    return records.map(r => DeudaMapper.toDomain(r as any))
+    return records.map(r => DeudaMapper.toDomain(r))
   }
 
   async findPendientesAnterioresA(mes: string): Promise<Deuda[]> {
@@ -21,7 +21,7 @@ export class PrismaDeudaRepository implements IDeudaRepository {
       where: { mes: { lt: mes }, estado: { not: 'Pagado' } },
       orderBy: { mes: 'asc' },
     })
-    return records.map(r => DeudaMapper.toDomain(r as any))
+    return records.map(r => DeudaMapper.toDomain(r))
   }
 
   async save(deuda: Deuda): Promise<Deuda> {
@@ -34,7 +34,7 @@ export class PrismaDeudaRepository implements IDeudaRepository {
         mes: deuda.mes,
       },
     })
-    return DeudaMapper.toDomain(record as any)
+    return DeudaMapper.toDomain(record)
   }
 
   async update(deuda: Deuda): Promise<Deuda> {
@@ -42,7 +42,7 @@ export class PrismaDeudaRepository implements IDeudaRepository {
       where: { id: deuda.id },
       data: { nombre: deuda.nombre, saldo: deuda.saldo, estado: deuda.estado },
     })
-    return DeudaMapper.toDomain(record as any)
+    return DeudaMapper.toDomain(record)
   }
 
   async delete(id: string): Promise<void> {

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus, History, ArrowLeftRight, Landmark } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ErrorMensaje } from '@/shared/components/ErrorMensaje'
 import { formatCOP } from '@/shared/lib/utils'
 import { useFuentes } from '../hooks/useFuentes'
 import { NuevoIngresoModal } from './NuevoIngresoModal'
@@ -18,7 +19,7 @@ const TIPO_ICONS: Record<string, string> = {
 }
 
 export function FuentesGrid() {
-  const { data: fuentes = [], isLoading } = useFuentes()
+  const { data: fuentes = [], isLoading, error, refetch } = useFuentes()
   const [ingresoOpen, setIngresoOpen] = useState(false)
   const [transferenciaOpen, setTransferenciaOpen] = useState(false)
   const [nuevaFuenteOpen, setNuevaFuenteOpen] = useState(false)
@@ -35,6 +36,8 @@ export function FuentesGrid() {
       </div>
     )
   }
+
+  if (error) return <ErrorMensaje mensaje={error.message} onReintentar={() => refetch()} />
 
   return (
     <div>

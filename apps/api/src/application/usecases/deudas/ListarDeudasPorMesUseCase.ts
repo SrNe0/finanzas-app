@@ -1,6 +1,6 @@
 import { IDeudaRepository } from '../../../domain/repositories/IDeudaRepository'
 import { DeudaDTO } from 'shared-types'
-import { DeudaMapper } from '../../../infrastructure/mappers/DeudaMapper'
+import { DeudaDtoMapper } from '../../mappers/DeudaDtoMapper'
 
 export class ListarDeudasPorMesUseCase {
   constructor(private deudaRepo: IDeudaRepository) {}
@@ -11,8 +11,8 @@ export class ListarDeudasPorMesUseCase {
       this.deudaRepo.findPendientesAnterioresA(mes),
     ])
     return {
-      delMes: delMes.map(DeudaMapper.toDTO),
-      arrastradas: arrastradas.map(DeudaMapper.toDTO),
+      delMes: delMes.map(DeudaDtoMapper.toDTO),
+      arrastradas: arrastradas.map(DeudaDtoMapper.toDTO),
     }
   }
 }

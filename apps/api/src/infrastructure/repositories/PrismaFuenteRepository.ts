@@ -8,19 +8,19 @@ export class PrismaFuenteRepository implements IFuenteRepository {
 
   async findById(id: string): Promise<Fuente | null> {
     const record = await this.prisma.fuente.findUnique({ where: { id } })
-    return record ? FuenteMapper.toDomain(record as any) : null
+    return record ? FuenteMapper.toDomain(record) : null
   }
 
   async findAll(): Promise<Fuente[]> {
     const records = await this.prisma.fuente.findMany({ orderBy: { nombre: 'asc' } })
-    return records.map(r => FuenteMapper.toDomain(r as any))
+    return records.map(r => FuenteMapper.toDomain(r))
   }
 
   async save(fuente: Fuente): Promise<Fuente> {
     const record = await this.prisma.fuente.create({
       data: { nombre: fuente.nombre, tipo: fuente.tipo, saldo: fuente.saldo },
     })
-    return FuenteMapper.toDomain(record as any)
+    return FuenteMapper.toDomain(record)
   }
 
   async update(fuente: Fuente): Promise<Fuente> {
@@ -28,6 +28,6 @@ export class PrismaFuenteRepository implements IFuenteRepository {
       where: { id: fuente.id },
       data: { nombre: fuente.nombre, saldo: fuente.saldo },
     })
-    return FuenteMapper.toDomain(record as any)
+    return FuenteMapper.toDomain(record)
   }
 }
