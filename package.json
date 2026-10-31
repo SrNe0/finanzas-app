@@ -6,11 +6,12 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
+    "postinstall": "node apps/api/scripts/asegurar-env.mjs",
+    "dev": "node apps/api/scripts/asegurar-env.mjs && concurrently \"pnpm --filter api dev\" \"pnpm --filter web dev\"",
     "build": "pnpm --filter api build && pnpm --filter web build",
-    "db:migrate": "pnpm --filter api prisma migrate dev",
-    "db:seed": "pnpm --filter api prisma db seed",
-    "db:studio": "pnpm --filter api prisma studio",
+    "db:migrate": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma migrate dev",
+    "db:seed": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma db seed",
+    "db:studio": "node apps/api/scripts/asegurar-env.mjs && pnpm --filter api prisma studio",
     "lint": "eslint .",
     "format": "prettier --write \"{apps,packages}/**/*.{ts,tsx,js,mts,mjs}\" \"*.mjs\"",
     "format:check": "prettier --check \"{apps,packages}/**/*.{ts,tsx,js,mts,mjs}\" \"*.mjs\"",
