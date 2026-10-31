@@ -1,5 +1,7 @@
 # Finanzas Personales
 
+[![CI](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml/badge.svg)](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml)
+
 App web de finanzas personales para llevar las deudas, los gastos y el dinero disponible del mes. Los montos se manejan en pesos colombianos (COP, enteros sin decimales) y las fechas en zona horaria America/Bogota.
 
 > **Uso local:** la app no tiene autenticación y guarda todo en una base SQLite en tu equipo. No la expongas a internet ni a una red que no sea de confianza.
