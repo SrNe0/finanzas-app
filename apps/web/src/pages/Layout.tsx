@@ -1,9 +1,11 @@
+import { Suspense } from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { MonthSelector } from '@/shared/components/MonthSelector'
 import { useAppStore } from '@/store/appStore'
 import { Sun, Moon } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
+import { Cargando } from '@/shared/components/Cargando'
 
 const TABS = [
   { path: '/', label: 'Resumen' },
@@ -48,7 +50,9 @@ export function Layout() {
       </header>
       <main className="max-w-6xl mx-auto px-4 py-6">
         <ErrorBoundary key={location.pathname}>
-          <Outlet />
+          <Suspense fallback={<Cargando />}>
+            <Outlet />
+          </Suspense>
         </ErrorBoundary>
       </main>
     </div>

@@ -1,13 +1,18 @@
+import { lazy } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { ErrorBoundary } from './shared/components/ErrorBoundary'
 import { Layout } from './pages/Layout'
-import { ResumenPageWrapper } from './pages/ResumenPageWrapper'
-import { DeudasPage } from './pages/DeudasPage'
-import { GastosPage } from './pages/GastosPage'
-import { DisponiblePage } from './pages/DisponiblePage'
 import { useAppStore } from './store/appStore'
+
+// Cada página se descarga cuando se visita: Recharts y el resto de sus dependencias no pesan en la carga inicial.
+const ResumenPageWrapper = lazy(() =>
+  import('./pages/ResumenPageWrapper').then(m => ({ default: m.ResumenPageWrapper }))
+)
+const DeudasPage = lazy(() => import('./pages/DeudasPage').then(m => ({ default: m.DeudasPage })))
+const GastosPage = lazy(() => import('./pages/GastosPage').then(m => ({ default: m.GastosPage })))
+const DisponiblePage = lazy(() => import('./pages/DisponiblePage').then(m => ({ default: m.DisponiblePage })))
 
 const queryClient = new QueryClient({
   defaultOptions: {
