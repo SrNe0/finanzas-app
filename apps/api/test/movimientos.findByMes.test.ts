@@ -28,7 +28,7 @@ async function crearMovimiento(descripcion: string, fechaUtc: string) {
 
 async function descripcionesDe(mes: string) {
   const movimientos = await repo.findByMes(mes)
-  return movimientos.map((m) => m.descripcion).sort()
+  return movimientos.map(m => m.descripcion).sort()
 }
 
 describe('PrismaMovimientoRepository.findByMes', () => {

@@ -23,13 +23,38 @@ import { useRegistrarIngreso, useTransferirFuentes } from './disponible/hooks/us
 
 // Mutaciones que mueven dinero entre fuentes: deben refrescar los saldos y el historial de cada fuente.
 const MUTACIONES = [
-  { nombre: 'useRegistrarGasto', hook: useRegistrarGasto, api: gastosApi.registrar, variables: { descripcion: 'x', categoria: 'Otro', monto: 1, mes: '2026-10' } },
+  {
+    nombre: 'useRegistrarGasto',
+    hook: useRegistrarGasto,
+    api: gastosApi.registrar,
+    variables: { descripcion: 'x', categoria: 'Otro', monto: 1, mes: '2026-10' },
+  },
   { nombre: 'useEliminarGasto', hook: useEliminarGasto, api: gastosApi.eliminar, variables: 'id' },
-  { nombre: 'usePagarDeuda', hook: usePagarDeuda, api: deudasApi.pagar, variables: { id: 'd', data: { fuenteId: 'f' } } },
-  { nombre: 'useActualizarDeuda', hook: useActualizarDeuda, api: deudasApi.actualizar, variables: { id: 'd', data: { saldo: 1 } } },
+  {
+    nombre: 'usePagarDeuda',
+    hook: usePagarDeuda,
+    api: deudasApi.pagar,
+    variables: { id: 'd', data: { fuenteId: 'f' } },
+  },
+  {
+    nombre: 'useActualizarDeuda',
+    hook: useActualizarDeuda,
+    api: deudasApi.actualizar,
+    variables: { id: 'd', data: { saldo: 1 } },
+  },
   { nombre: 'useEliminarDeuda', hook: useEliminarDeuda, api: deudasApi.eliminar, variables: 'id' },
-  { nombre: 'useRegistrarIngreso', hook: useRegistrarIngreso, api: fuentesApi.ingresar, variables: { id: 'f', data: { monto: 1 } } },
-  { nombre: 'useTransferirFuentes', hook: useTransferirFuentes, api: fuentesApi.transferir, variables: { origenId: 'a', destinoId: 'b', monto: 1 } },
+  {
+    nombre: 'useRegistrarIngreso',
+    hook: useRegistrarIngreso,
+    api: fuentesApi.ingresar,
+    variables: { id: 'f', data: { monto: 1 } },
+  },
+  {
+    nombre: 'useTransferirFuentes',
+    hook: useTransferirFuentes,
+    api: fuentesApi.transferir,
+    variables: { origenId: 'a', destinoId: 'b', monto: 1 },
+  },
 ]
 
 beforeEach(() => {

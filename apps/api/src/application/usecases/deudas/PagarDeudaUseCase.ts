@@ -15,7 +15,7 @@ export class PagarDeudaUseCase {
   constructor(private uow: IUnitOfWork) {}
 
   async execute(input: PagarDeudaInput): Promise<{ deuda: DeudaDTO; fuente: FuenteDTO }> {
-    return this.uow.run(async (repos) => {
+    return this.uow.run(async repos => {
       const deuda = await repos.deudas.findById(input.deudaId)
       if (!deuda) throw new NotFoundError('Deuda', input.deudaId)
 

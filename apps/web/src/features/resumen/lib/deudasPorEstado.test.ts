@@ -3,7 +3,15 @@ import type { DeudaDTO } from 'shared-types'
 import { calcularDeudasPorEstado } from './deudasPorEstado'
 
 function deuda(estado: string, valor: number, saldo: number): DeudaDTO {
-  return { id: 'd', nombre: 'Deuda', valor, saldo, estado, mes: '2026-10', creadoEn: '2026-10-01T00:00:00.000Z' } as DeudaDTO
+  return {
+    id: 'd',
+    nombre: 'Deuda',
+    valor,
+    saldo,
+    estado,
+    mes: '2026-10',
+    creadoEn: '2026-10-01T00:00:00.000Z',
+  } as DeudaDTO
 }
 
 const suma = (porciones: { value: number }[]) => porciones.reduce((total, p) => total + p.value, 0)

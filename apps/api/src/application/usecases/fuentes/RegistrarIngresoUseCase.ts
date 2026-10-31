@@ -8,8 +8,11 @@ import { MovimientoMapper } from '../../../infrastructure/mappers/MovimientoMapp
 export class RegistrarIngresoUseCase {
   constructor(private uow: IUnitOfWork) {}
 
-  async execute(fuenteId: string, input: RegistrarIngresoInput): Promise<{ fuente: FuenteDTO; movimiento: MovimientoDTO }> {
-    return this.uow.run(async (repos) => {
+  async execute(
+    fuenteId: string,
+    input: RegistrarIngresoInput
+  ): Promise<{ fuente: FuenteDTO; movimiento: MovimientoDTO }> {
+    return this.uow.run(async repos => {
       const fuente = await repos.fuentes.findById(fuenteId)
       if (!fuente) throw new NotFoundError('Fuente', fuenteId)
 
@@ -17,7 +20,15 @@ export class RegistrarIngresoUseCase {
       await repos.fuentes.update(fuente)
 
       const movimiento = await repos.movimientos.save(
-        new Movimiento(null, TipoMovimiento.INGRESO, fuente.id, null, input.descripcion ?? null, input.monto, new Date())
+        new Movimiento(
+          null,
+          TipoMovimiento.INGRESO,
+          fuente.id,
+          null,
+          input.descripcion ?? null,
+          input.monto,
+          new Date()
+        )
       )
 
       return { fuente: FuenteMapper.toDTO(fuente), movimiento: MovimientoMapper.toDTO(movimiento) }

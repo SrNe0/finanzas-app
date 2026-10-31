@@ -18,7 +18,7 @@ describe('Fuente.depositar', () => {
     expect(f.saldo).toBe(12_500)
   })
 
-  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja el saldo igual', (monto) => {
+  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja el saldo igual', monto => {
     const f = fuente(10_000)
 
     expect(() => f.depositar(monto)).toThrow(DomainError)
@@ -50,7 +50,7 @@ describe('Fuente.debitar', () => {
     expect(f.saldo).toBe(1_000)
   })
 
-  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja el saldo igual', (monto) => {
+  it.each(MONTOS_INVALIDOS)('rechaza el monto %s y deja el saldo igual', monto => {
     const f = fuente(10_000)
 
     expect(() => f.debitar(monto)).toThrow(DomainError)

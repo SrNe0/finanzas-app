@@ -5,7 +5,7 @@ export class EliminarDeudaUseCase {
   constructor(private uow: IUnitOfWork) {}
 
   async execute(id: string): Promise<void> {
-    await this.uow.run(async (repos) => {
+    await this.uow.run(async repos => {
       const deuda = await repos.deudas.findById(id)
       if (!deuda) throw new NotFoundError('Deuda', id)
 

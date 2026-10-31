@@ -23,7 +23,12 @@ interface Props {
 
 export function NuevoIngresoModal({ open, onClose, fuentes }: Props) {
   const ingreso = useRegistrarIngreso()
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({ resolver: zodResolver(schema) })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(schema) })
 
   const onSubmit = handleSubmit(async ({ fuenteId, monto, descripcion }) => {
     await ingreso.mutateAsync({ id: fuenteId, data: { monto, descripcion } })
@@ -42,7 +47,10 @@ export function NuevoIngresoModal({ open, onClose, fuentes }: Props) {
             <Label>Destino</Label>
             <div className="mt-1 space-y-2">
               {fuentes.map(f => (
-                <label key={f.id} className="flex items-center justify-between p-2.5 border border-border rounded-lg cursor-pointer hover:border-text-secondary has-[:checked]:border-accent-blue has-[:checked]:bg-accent-blue/10">
+                <label
+                  key={f.id}
+                  className="flex items-center justify-between p-2.5 border border-border rounded-lg cursor-pointer hover:border-text-secondary has-[:checked]:border-accent-blue has-[:checked]:bg-accent-blue/10"
+                >
                   <div className="flex items-center gap-2">
                     <input type="radio" value={f.id} {...register('fuenteId')} className="accent-accent-blue" />
                     <span className="text-sm text-text-primary">{f.nombre}</span>
@@ -64,7 +72,9 @@ export function NuevoIngresoModal({ open, onClose, fuentes }: Props) {
             <Input id="desc" {...register('descripcion')} placeholder="Ej: Quincena" className="mt-1" />
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
             <Button type="submit" disabled={ingreso.isPending}>
               {ingreso.isPending ? 'Guardando...' : 'Registrar'}
             </Button>

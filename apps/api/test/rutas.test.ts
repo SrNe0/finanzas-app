@@ -78,7 +78,7 @@ describe('rutas de fuentes', () => {
     expect(historial.cuerpo[0]).toMatchObject({ tipo: 'ingreso', monto: 250_000, descripcion: 'Quincena' })
   })
 
-  it.each([0, -100, 1.5])('POST /api/fuentes/:id/ingresar con monto %s responde 400', async (monto) => {
+  it.each([0, -100, 1.5])('POST /api/fuentes/:id/ingresar con monto %s responde 400', async monto => {
     const id = await crearFuente()
 
     expect((await pedir('POST', `/api/fuentes/${id}/ingresar`, { monto })).status).toBe(400)
@@ -95,7 +95,11 @@ describe('rutas de fuentes', () => {
     const origen = await crearFuente('Cuenta', 100_000)
     const destino = await crearFuente('Efectivo', 0)
 
-    const { status, cuerpo } = await pedir('POST', '/api/fuentes/transferir', { origenId: origen, destinoId: destino, monto: 40_000 })
+    const { status, cuerpo } = await pedir('POST', '/api/fuentes/transferir', {
+      origenId: origen,
+      destinoId: destino,
+      monto: 40_000,
+    })
 
     expect(status).toBe(200)
     expect(cuerpo.origen.saldo).toBe(60_000)
@@ -107,7 +111,11 @@ describe('rutas de fuentes', () => {
     const destino = await crearFuente('Efectivo', 0)
 
     const misma = await pedir('POST', '/api/fuentes/transferir', { origenId: origen, destinoId: origen, monto: 100 })
-    const sinSaldo = await pedir('POST', '/api/fuentes/transferir', { origenId: origen, destinoId: destino, monto: 5_000 })
+    const sinSaldo = await pedir('POST', '/api/fuentes/transferir', {
+      origenId: origen,
+      destinoId: destino,
+      monto: 5_000,
+    })
 
     expect(misma.status).toBe(422)
     expect(sinSaldo.status).toBe(422)
@@ -167,7 +175,10 @@ describe('rutas de deudas', () => {
     expect(status).toBe(422)
     expect(cuerpo.error.message).toContain('Cuenta')
     expect(await saldoDe(fuente)).toBe(1_000)
-    expect(await prisma.deuda.findUniqueOrThrow({ where: { id: deuda } })).toMatchObject({ saldo: 100_000, estado: 'Pendiente' })
+    expect(await prisma.deuda.findUniqueOrThrow({ where: { id: deuda } })).toMatchObject({
+      saldo: 100_000,
+      estado: 'Pendiente',
+    })
   })
 
   it('pagar una deuda o con una fuente inexistentes responde 404', async () => {
@@ -182,7 +193,11 @@ describe('rutas de deudas', () => {
     const fuente = await crearFuente('Cuenta', 80_000)
     const deuda = await crearDeuda(100_000)
 
-    const { status, cuerpo } = await pedir('PATCH', `/api/deudas/${deuda}`, { nombre: 'Visa', saldo: 70_000, fuenteId: fuente })
+    const { status, cuerpo } = await pedir('PATCH', `/api/deudas/${deuda}`, {
+      nombre: 'Visa',
+      saldo: 70_000,
+      fuenteId: fuente,
+    })
 
     expect(status).toBe(200)
     expect(cuerpo).toMatchObject({ nombre: 'Visa', saldo: 70_000, estado: 'En proceso' })
@@ -286,7 +301,13 @@ describe('flujo completo', () => {
     await pedir('POST', `/api/fuentes/${fuente}/ingresar`, { monto: 500_000 })
     const deuda = await crearDeuda(200_000)
     await pedir('POST', `/api/deudas/${deuda}/pagar`, { fuenteId: fuente, monto: 80_000 })
-    await pedir('POST', '/api/gastos', { descripcion: 'Mercado', categoria: 'Alimentación', monto: 20_000, mes: '2026-10', fuenteId: fuente })
+    await pedir('POST', '/api/gastos', {
+      descripcion: 'Mercado',
+      categoria: 'Alimentación',
+      monto: 20_000,
+      mes: '2026-10',
+      fuenteId: fuente,
+    })
 
     // Los movimientos se fechan "ahora": se consulta el mes en que ocurrieron (hora de Bogotá)
     const mesBogota = mesDeBogota(new Date())

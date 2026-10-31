@@ -19,7 +19,9 @@ export function DeudasTable({ mes }: Props) {
   if (isLoading) {
     return (
       <div className="space-y-2">
-        {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}
+        {Array.from({ length: 5 }).map((_, i) => (
+          <Skeleton key={i} className="h-12 w-full" />
+        ))}
       </div>
     )
   }
@@ -58,12 +60,18 @@ export function DeudasTable({ mes }: Props) {
               {arrastradas.length > 0 && (
                 <>
                   <tr className="bg-accent-amber/5">
-                    <td colSpan={6} className="px-4 py-1.5 text-xs text-accent-amber font-medium">Arrastradas de meses anteriores</td>
+                    <td colSpan={6} className="px-4 py-1.5 text-xs text-accent-amber font-medium">
+                      Arrastradas de meses anteriores
+                    </td>
                   </tr>
-                  {arrastradas.map(d => <DeudaRow key={d.id} deuda={d} arrastrada fuentes={fuentes} />)}
+                  {arrastradas.map(d => (
+                    <DeudaRow key={d.id} deuda={d} arrastrada fuentes={fuentes} />
+                  ))}
                 </>
               )}
-              {delMes.map(d => <DeudaRow key={d.id} deuda={d} fuentes={fuentes} />)}
+              {delMes.map(d => (
+                <DeudaRow key={d.id} deuda={d} fuentes={fuentes} />
+              ))}
             </tbody>
           </table>
         </div>

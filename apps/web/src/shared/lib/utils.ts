@@ -17,16 +17,13 @@ export function formatCOP(value: number): string {
 export function getMesLabel(mes: string): string {
   const [year, month] = mes.split('-')
   const date = new Date(parseInt(year), parseInt(month) - 1, 1)
-  return date.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' })
-    .replace(/^./, s => s.toUpperCase())
+  return date.toLocaleDateString('es-CO', { month: 'long', year: 'numeric' }).replace(/^./, s => s.toUpperCase())
 }
 
 export function getMesAbr(mes: string): string {
   const [year, month] = mes.split('-')
   const date = new Date(parseInt(year), parseInt(month) - 1, 1)
-  return date.toLocaleDateString('es-CO', { month: 'short' })
-    .toUpperCase()
-    .replace('.', '')
+  return date.toLocaleDateString('es-CO', { month: 'short' }).toUpperCase().replace('.', '')
 }
 
 export function addMonths(mes: string, n: number): string {

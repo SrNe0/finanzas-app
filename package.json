@@ -10,9 +10,20 @@
     "build": "pnpm --filter api build && pnpm --filter web build",
     "db:migrate": "pnpm --filter api prisma migrate dev",
     "db:seed": "pnpm --filter api prisma db seed",
-    "db:studio": "pnpm --filter api prisma studio"
+    "db:studio": "pnpm --filter api prisma studio",
+    "lint": "eslint .",
+    "format": "prettier --write \"{apps,packages}/**/*.{ts,tsx,js,mts,mjs}\" \"*.mjs\"",
+    "format:check": "prettier --check \"{apps,packages}/**/*.{ts,tsx,js,mts,mjs}\" \"*.mjs\"",
+    "typecheck": "pnpm --filter api typecheck && pnpm --filter web typecheck"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^8.2.2",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript-eslint": "^8.72.1"
   }
 }

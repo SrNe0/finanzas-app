@@ -25,7 +25,7 @@ afterEach(async () => {
 })
 
 describe('validación del mes en las rutas', () => {
-  it.each(['2026-13', '2026-00', '2026-1', '26-10', 'octubre'])('rechaza el mes %s en las consultas', async (mes) => {
+  it.each(['2026-13', '2026-00', '2026-1', '26-10', 'octubre'])('rechaza el mes %s en las consultas', async mes => {
     for (const url of ['/api/resumen', '/api/deudas', '/api/gastos']) {
       const respuesta = await app.inject({ method: 'GET', url: `${url}?mes=${mes}` })
 
@@ -56,7 +56,7 @@ describe('validación del mes en las rutas', () => {
     expect(await prisma.gasto.count()).toBe(0)
   })
 
-  it.each(['2026-01', '2026-10', '2026-12'])('acepta el mes válido %s', async (mes) => {
+  it.each(['2026-01', '2026-10', '2026-12'])('acepta el mes válido %s', async mes => {
     const respuesta = await app.inject({ method: 'GET', url: `/api/gastos?mes=${mes}` })
 
     expect(respuesta.statusCode).toBe(200)

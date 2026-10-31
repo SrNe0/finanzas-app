@@ -88,7 +88,10 @@ describe('TransferirFuentes', () => {
     const destino = await crearFuente('Efectivo', 5_000)
     const guardarOriginal = PrismaMovimientoRepository.prototype.save
     let llamadas = 0
-    vi.spyOn(PrismaMovimientoRepository.prototype, 'save').mockImplementation(async function (this: PrismaMovimientoRepository, movimiento) {
+    vi.spyOn(PrismaMovimientoRepository.prototype, 'save').mockImplementation(async function (
+      this: PrismaMovimientoRepository,
+      movimiento
+    ) {
       llamadas++
       if (llamadas === 2) throw new Error('falla')
       return guardarOriginal.call(this, movimiento)

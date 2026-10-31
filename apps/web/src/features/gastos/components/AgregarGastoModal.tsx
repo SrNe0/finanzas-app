@@ -29,10 +29,22 @@ export function AgregarGastoModal({ open, onClose, mes }: Props) {
   const registrar = useRegistrarGasto()
   const { data: fuentes = [] } = useFuentes()
   type FormData = z.infer<typeof schema>
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<FormData>({ resolver: zodResolver(schema) })
 
   const onSubmit = handleSubmit(async (data: FormData) => {
-    await registrar.mutateAsync({ descripcion: data.descripcion, categoria: data.categoria, monto: data.monto, mes, fuenteId: data.fuenteId || undefined })
+    await registrar.mutateAsync({
+      descripcion: data.descripcion,
+      categoria: data.categoria,
+      monto: data.monto,
+      mes,
+      fuenteId: data.fuenteId || undefined,
+    })
     reset()
     onClose()
   })
@@ -47,7 +59,9 @@ export function AgregarGastoModal({ open, onClose, mes }: Props) {
           <div>
             <Label>Descripción</Label>
             <Input {...register('descripcion')} placeholder="Ej: Mercado" className="mt-1" />
-            {errors.descripcion && <p className="text-xs text-accent-red mt-1">{errors.descripcion.message as string}</p>}
+            {errors.descripcion && (
+              <p className="text-xs text-accent-red mt-1">{errors.descripcion.message as string}</p>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -57,9 +71,15 @@ export function AgregarGastoModal({ open, onClose, mes }: Props) {
                 name="categoria"
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="mt-1"><SelectValue placeholder="Seleccionar" /></SelectTrigger>
+                    <SelectTrigger className="mt-1">
+                      <SelectValue placeholder="Seleccionar" />
+                    </SelectTrigger>
                     <SelectContent>
-                      {CATEGORIAS.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                      {CATEGORIAS.map(c => (
+                        <SelectItem key={c} value={c}>
+                          {c}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}
@@ -79,16 +99,24 @@ export function AgregarGastoModal({ open, onClose, mes }: Props) {
               name="fuenteId"
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger className="mt-1"><SelectValue placeholder="Sin fuente" /></SelectTrigger>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Sin fuente" />
+                  </SelectTrigger>
                   <SelectContent>
-                    {fuentes.map(f => <SelectItem key={f.id} value={f.id}>{f.nombre}</SelectItem>)}
+                    {fuentes.map(f => (
+                      <SelectItem key={f.id} value={f.id}>
+                        {f.nombre}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
             />
           </div>
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
             <Button type="submit" disabled={registrar.isPending}>
               {registrar.isPending ? 'Guardando...' : 'Agregar'}
             </Button>

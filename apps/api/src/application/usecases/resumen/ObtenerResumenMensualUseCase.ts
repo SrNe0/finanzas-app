@@ -28,16 +28,10 @@ export class ObtenerResumenMensualUseCase {
     const totalDeudasPagadas = deudas.reduce((s, d) => s + (d.valor - d.saldo), 0)
     const totalGastos = gastos.reduce((s, g) => s + g.monto, 0)
     const totalDisponible = fuentes.reduce((s, f) => s + f.saldo, 0)
-    const totalIngresos = movimientos
-      .filter(m => m.tipo === 'ingreso')
-      .reduce((s, m) => s + m.monto, 0)
-    const totalPagosDeuda = movimientos
-      .filter(m => m.tipo === 'pago_deuda')
-      .reduce((s, m) => s + m.monto, 0)
+    const totalIngresos = movimientos.filter(m => m.tipo === 'ingreso').reduce((s, m) => s + m.monto, 0)
+    const totalPagosDeuda = movimientos.filter(m => m.tipo === 'pago_deuda').reduce((s, m) => s + m.monto, 0)
 
-    const ultimosMovimientos = movimientos
-      .sort((a, b) => b.fecha.getTime() - a.fecha.getTime())
-      .slice(0, 10)
+    const ultimosMovimientos = movimientos.sort((a, b) => b.fecha.getTime() - a.fecha.getTime()).slice(0, 10)
 
     return {
       mes,

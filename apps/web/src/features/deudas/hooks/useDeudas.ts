@@ -41,8 +41,7 @@ export function useActualizarDeuda() {
 export function usePagarDeuda() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { fuenteId: string; monto?: number } }) =>
-      deudasApi.pagar(id, data),
+    mutationFn: ({ id, data }: { id: string; data: { fuenteId: string; monto?: number } }) => deudasApi.pagar(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['deudas'] })
       qc.invalidateQueries({ queryKey: ['fuentes'] })

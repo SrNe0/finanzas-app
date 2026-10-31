@@ -58,8 +58,16 @@ describe('ObtenerResumenMensual', () => {
   it('no mezcla los datos de otros meses', async () => {
     const fuente = m.agregarFuente('Cuenta', 0)
     m.agregarDeuda(100_000, 100_000, EstadoDeuda.PENDIENTE, '2026-09')
-    m.agregarMovimiento({ tipo: TipoMovimiento.INGRESO, monto: 999, fuenteId: fuente.id, fecha: new Date('2026-09-15T12:00:00-05:00') })
-    m.datos.gastos.set('g1', new Gasto('g1', 'Viejo', 'Otro', 777, '2026-09', null, new Date('2026-09-15T12:00:00-05:00')))
+    m.agregarMovimiento({
+      tipo: TipoMovimiento.INGRESO,
+      monto: 999,
+      fuenteId: fuente.id,
+      fecha: new Date('2026-09-15T12:00:00-05:00'),
+    })
+    m.datos.gastos.set(
+      'g1',
+      new Gasto('g1', 'Viejo', 'Otro', 777, '2026-09', null, new Date('2026-09-15T12:00:00-05:00'))
+    )
 
     const resumen = await obtener.execute('2026-10')
 
@@ -69,7 +77,12 @@ describe('ObtenerResumenMensual', () => {
 
   it('un movimiento hecho el 31 a las 9 p. m. en Bogotá cuenta en ese mes', async () => {
     const fuente = m.agregarFuente('Cuenta', 0)
-    m.agregarMovimiento({ tipo: TipoMovimiento.INGRESO, monto: 1_000, fuenteId: fuente.id, fecha: new Date('2026-10-31T21:00:00-05:00') })
+    m.agregarMovimiento({
+      tipo: TipoMovimiento.INGRESO,
+      monto: 1_000,
+      fuenteId: fuente.id,
+      fecha: new Date('2026-10-31T21:00:00-05:00'),
+    })
 
     expect((await obtener.execute('2026-10')).totalIngresos).toBe(1_000)
     expect((await obtener.execute('2026-11')).totalIngresos).toBe(0)
@@ -84,6 +97,6 @@ describe('ObtenerResumenMensual', () => {
     const resumen = await obtener.execute('2026-10')
 
     expect(resumen.ultimosMovimientos).toHaveLength(10)
-    expect(resumen.ultimosMovimientos.map((x) => x.monto)).toEqual([12, 11, 10, 9, 8, 7, 6, 5, 4, 3])
+    expect(resumen.ultimosMovimientos.map(x => x.monto)).toEqual([12, 11, 10, 9, 8, 7, 6, 5, 4, 3])
   })
 })

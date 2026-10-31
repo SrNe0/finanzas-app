@@ -2,7 +2,17 @@ import { useState, useEffect } from 'react'
 import { Trash2 } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/shared/components/ui/alert-dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/shared/components/ui/alert-dialog'
 import { formatCOP, getMesAbr } from '@/shared/lib/utils'
 import { useActualizarDeuda, usePagarDeuda, useEliminarDeuda } from '../hooks/useDeudas'
 import { PagarDesdeModal } from './PagarDesdeModal'
@@ -79,12 +89,16 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
 
   return (
     <>
-      <tr className={`border-b border-border transition-colors hover:bg-surface/50 ${arrastrada ? 'bg-accent-amber/5' : ''}`}>
+      <tr
+        className={`border-b border-border transition-colors hover:bg-surface/50 ${arrastrada ? 'bg-accent-amber/5' : ''}`}
+      >
         <td className="py-3 px-4">
           <div className="flex items-center gap-2">
             <span className="text-sm text-text-primary">{deuda.nombre}</span>
             {arrastrada && (
-              <Badge variant="amber" className="text-[10px] px-1.5 py-0">{getMesAbr(deuda.mes)}</Badge>
+              <Badge variant="amber" className="text-[10px] px-1.5 py-0">
+                {getMesAbr(deuda.mes)}
+              </Badge>
             )}
           </div>
         </td>
@@ -99,7 +113,9 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
               if (e.key === 'Enter') confirmarSaldo()
               if (e.key === 'Escape') restaurarSaldo()
             }}
-            onBlur={() => { if (!pagarModal) restaurarSaldo() }}
+            onBlur={() => {
+              if (!pagarModal) restaurarSaldo()
+            }}
             title="Enter para registrar el pago, Esc para cancelar"
             className="w-28 font-mono text-sm bg-transparent border-b border-transparent hover:border-border focus:border-accent-blue focus:outline-none text-text-primary py-0.5 px-1"
           />
@@ -110,13 +126,15 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
             onChange={e => handleEstadoChange(e.target.value)}
             className="text-xs bg-transparent border border-border rounded px-2 py-1 text-text-secondary focus:outline-none focus:border-accent-blue"
           >
-            {ESTADOS.map(e => <option key={e} value={e}>{e}</option>)}
+            {ESTADOS.map(e => (
+              <option key={e} value={e}>
+                {e}
+              </option>
+            ))}
           </select>
         </td>
         <td className="py-3 px-4">
-          <Badge variant={estadoColor[deuda.estado as keyof typeof estadoColor] ?? 'outline'}>
-            {deuda.estado}
-          </Badge>
+          <Badge variant={estadoColor[deuda.estado as keyof typeof estadoColor] ?? 'outline'}>{deuda.estado}</Badge>
         </td>
         <td className="py-3 px-4">
           <AlertDialog>
@@ -131,7 +149,10 @@ export function DeudaRow({ deuda, arrastrada, fuentes }: Props) {
                 <AlertDialogDescription>
                   Se eliminará "{deuda.nombre}" permanentemente.
                   {deuda.valor > deuda.saldo && (
-                    <> Se devolverán a las fuentes los abonos registrados (hasta {formatCOP(deuda.valor - deuda.saldo)}).</>
+                    <>
+                      {' '}
+                      Se devolverán a las fuentes los abonos registrados (hasta {formatCOP(deuda.valor - deuda.saldo)}).
+                    </>
                   )}
                 </AlertDialogDescription>
               </AlertDialogHeader>

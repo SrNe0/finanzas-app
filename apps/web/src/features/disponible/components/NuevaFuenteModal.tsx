@@ -29,11 +29,16 @@ interface Props {
 
 export function NuevaFuenteModal({ open, onClose }: Props) {
   const crear = useCrearFuente()
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async data => {
     await crear.mutateAsync(data)
     reset()
     onClose()
@@ -74,7 +79,9 @@ export function NuevaFuenteModal({ open, onClose }: Props) {
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancelar
+            </Button>
             <Button type="submit" disabled={crear.isPending}>
               {crear.isPending ? 'Creando...' : 'Crear fuente'}
             </Button>

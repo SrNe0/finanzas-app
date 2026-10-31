@@ -13,7 +13,15 @@ type PrismaGasto = {
 
 export class GastoMapper {
   static toDomain(record: PrismaGasto): Gasto {
-    return new Gasto(record.id, record.descripcion, record.categoria, record.monto, record.mes, record.fuenteId, record.fecha)
+    return new Gasto(
+      record.id,
+      record.descripcion,
+      record.categoria,
+      record.monto,
+      record.mes,
+      record.fuenteId,
+      record.fecha
+    )
   }
 
   static toDTO(g: Gasto): GastoDTO {

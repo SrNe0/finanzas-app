@@ -14,8 +14,7 @@ export interface PorcionDeudas {
  * La suma de las porciones es el valor total de las deudas.
  */
 export function calcularDeudasPorEstado(deudas: DeudaDTO[]): PorcionDeudas[] {
-  const saldoEn = (estado: string) =>
-    deudas.filter(d => d.estado === estado).reduce((suma, d) => suma + d.saldo, 0)
+  const saldoEn = (estado: string) => deudas.filter(d => d.estado === estado).reduce((suma, d) => suma + d.saldo, 0)
 
   const porciones: PorcionDeudas[] = [
     { name: 'Pendiente', value: saldoEn('Pendiente') },

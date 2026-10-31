@@ -19,12 +19,12 @@ function applyTheme(theme: 'dark' | 'light') {
 
 export const useAppStore = create<AppStore>()(
   persist(
-    (set) => ({
+    set => ({
       mesActivo: getCurrentMes(),
-      setMesActivo: (mes) => set({ mesActivo: mes }),
+      setMesActivo: mes => set({ mesActivo: mes }),
       theme: 'dark',
       toggleTheme: () =>
-        set((state) => {
+        set(state => {
           const next = state.theme === 'dark' ? 'light' : 'dark'
           applyTheme(next)
           return { theme: next }
@@ -33,13 +33,13 @@ export const useAppStore = create<AppStore>()(
     {
       name: 'finanzas-app-store',
       // Solo se guarda el tema: el mes activo siempre arranca en el mes actual.
-      partialize: (state) => ({ theme: state.theme }),
+      partialize: state => ({ theme: state.theme }),
       // Descarta un mes activo guardado por versiones anteriores.
       merge: (persisted, current) => ({
         ...current,
         theme: (persisted as { theme?: 'dark' | 'light' } | undefined)?.theme ?? current.theme,
       }),
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => state => {
         if (state) applyTheme(state.theme)
       },
     }

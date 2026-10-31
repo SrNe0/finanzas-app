@@ -24,7 +24,12 @@ describe('RegistrarGasto', () => {
     expect(m.datos.fuentes.get(fuente.id)?.saldo).toBe(30_000)
     const movimientos = [...m.datos.movimientos.values()]
     expect(movimientos).toHaveLength(1)
-    expect(movimientos[0]).toMatchObject({ tipo: TipoMovimiento.GASTO, monto: 20_000, fuenteId: fuente.id, gastoId: dto.id })
+    expect(movimientos[0]).toMatchObject({
+      tipo: TipoMovimiento.GASTO,
+      monto: 20_000,
+      fuenteId: fuente.id,
+      gastoId: dto.id,
+    })
   })
 
   it('sin fuente solo guarda el gasto', async () => {
@@ -39,14 +44,18 @@ describe('RegistrarGasto', () => {
   })
 
   it('lanza NotFoundError si la fuente no existe', async () => {
-    await expect(new RegistrarGastoUseCase(m.uow).execute({ ...gasto, fuenteId: 'no-existe' })).rejects.toBeInstanceOf(NotFoundError)
+    await expect(new RegistrarGastoUseCase(m.uow).execute({ ...gasto, fuenteId: 'no-existe' })).rejects.toBeInstanceOf(
+      NotFoundError
+    )
     expect(m.datos.gastos.size).toBe(0)
   })
 
   it('con fondos insuficientes no guarda el gasto ni toca la fuente', async () => {
     const fuente = m.agregarFuente('Cuenta', 5_000)
 
-    await expect(new RegistrarGastoUseCase(m.uow).execute({ ...gasto, fuenteId: fuente.id })).rejects.toBeInstanceOf(InsufficientFundsError)
+    await expect(new RegistrarGastoUseCase(m.uow).execute({ ...gasto, fuenteId: fuente.id })).rejects.toBeInstanceOf(
+      InsufficientFundsError
+    )
 
     expect(m.datos.fuentes.get(fuente.id)?.saldo).toBe(5_000)
     expect(m.datos.gastos.size).toBe(0)
@@ -64,7 +73,7 @@ describe('ListarGastosPorMes', () => {
     const lista = await new ListarGastosPorMesUseCase(m.repos.gastos).execute('2026-10')
 
     expect(lista).toHaveLength(2)
-    expect(lista.every((g) => g.mes === '2026-10')).toBe(true)
+    expect(lista.every(g => g.mes === '2026-10')).toBe(true)
   })
 })
 
