@@ -2,8 +2,8 @@ import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, DeudaDTO, FuenteDTO } from 'shared-types'
-import { DeudaMapper } from '../../../infrastructure/mappers/DeudaMapper'
-import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
+import { DeudaDtoMapper } from '../../mappers/DeudaDtoMapper'
+import { FuenteDtoMapper } from '../../mappers/FuenteDtoMapper'
 
 interface PagarDeudaInput {
   deudaId: string
@@ -32,7 +32,7 @@ export class PagarDeudaUseCase {
         new Movimiento(null, TipoMovimiento.PAGO_DEUDA, fuente.id, deuda.id, `Pago ${deuda.nombre}`, monto, new Date())
       )
 
-      return { deuda: DeudaMapper.toDTO(deuda), fuente: FuenteMapper.toDTO(fuente) }
+      return { deuda: DeudaDtoMapper.toDTO(deuda), fuente: FuenteDtoMapper.toDTO(fuente) }
     })
   }
 }

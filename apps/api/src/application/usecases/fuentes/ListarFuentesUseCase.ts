@@ -1,12 +1,12 @@
 import { IFuenteRepository } from '../../../domain/repositories/IFuenteRepository'
 import { FuenteDTO } from 'shared-types'
-import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
+import { FuenteDtoMapper } from '../../mappers/FuenteDtoMapper'
 
 export class ListarFuentesUseCase {
   constructor(private fuenteRepo: IFuenteRepository) {}
 
   async execute(): Promise<FuenteDTO[]> {
     const fuentes = await this.fuenteRepo.findAll()
-    return fuentes.map(FuenteMapper.toDTO)
+    return fuentes.map(FuenteDtoMapper.toDTO)
   }
 }

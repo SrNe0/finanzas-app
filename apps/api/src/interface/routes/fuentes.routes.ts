@@ -1,10 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
+import { TipoFuente } from 'shared-types'
 import { Container } from '../../shared/container'
 
 const CrearFuenteSchema = z.object({
   nombre: z.string().min(1),
-  tipo: z.enum(['cuenta', 'efectivo', 'bono', 'otro']),
+  tipo: z.nativeEnum(TipoFuente),
 })
 
 const IngresoSchema = z.object({
@@ -26,7 +27,7 @@ export async function fuentesRoutes(fastify: FastifyInstance, container: Contain
 
   fastify.post('/fuentes', async (req, reply) => {
     const body = CrearFuenteSchema.parse(req.body)
-    const fuente = await container.fuentes.crear.execute(body as any)
+    const fuente = await container.fuentes.crear.execute(body)
     return reply.code(201).send(fuente)
   })
 
