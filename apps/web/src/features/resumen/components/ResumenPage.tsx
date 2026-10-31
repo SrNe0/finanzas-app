@@ -3,6 +3,7 @@ import { Progress } from '@/shared/components/ui/progress'
 import { formatCOP } from '@/shared/lib/utils'
 import { getTooltipProps } from '@/shared/lib/chartConfig'
 import { useResumen } from '../hooks/useResumen'
+import { calcularDeudasPorEstado } from '../lib/deudasPorEstado'
 import { useFuentes } from '@/features/disponible/hooks/useFuentes'
 import { useAppStore } from '@/store/appStore'
 import { TrendingUp, TrendingDown, CreditCard, Wallet } from 'lucide-react'
@@ -79,25 +80,11 @@ export function ResumenPage({ mes }: Props) {
   const balanceTotal = balanceData.reduce((s, d) => s + d.value, 0)
 
   // --- Donut 2: Deudas por estado (por monto) ---
-  // Pendiente / En proceso → usar saldo restante
-  // Pagado → usar valor original (saldo=0 al estar pagada)
-  const deudasPorEstado = [
-    {
-      name: 'Pendiente',
-      value: data.deudas.filter(d => d.estado === 'Pendiente').reduce((s, d) => s + d.saldo, 0),
-      color: ESTADO_COLORS['Pendiente'],
-    },
-    {
-      name: 'En proceso',
-      value: data.deudas.filter(d => d.estado === 'En proceso').reduce((s, d) => s + d.saldo, 0),
-      color: ESTADO_COLORS['En proceso'],
-    },
-    {
-      name: 'Pagado',
-      value: data.deudas.filter(d => d.estado === 'Pagado').reduce((s, d) => s + d.valor, 0),
-      color: ESTADO_COLORS['Pagado'],
-    },
-  ].filter(d => d.value > 0)
+  // Total = valor de las deudas; Pagado incluye los abonos parciales
+  const deudasPorEstado = calcularDeudasPorEstado(data.deudas).map(p => ({
+    ...p,
+    color: ESTADO_COLORS[p.name],
+  }))
 
   // --- Donut 3: Gastos por categoría ---
   const categorias = [...new Set(data.gastos.map(g => g.categoria))]
@@ -212,7 +199,7 @@ export function ResumenPage({ mes }: Props) {
                   label={({ cx, cy }) => (
                     <DonutLabel
                       cx={cx} cy={cy}
-                      label="Saldo total"
+                      label="Total deudas"
                       value={formatCOP(deudasPorEstado.reduce((s, d) => s + d.value, 0))}
                     />
                   )}
