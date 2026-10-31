@@ -26,6 +26,8 @@ export function useEliminarGasto() {
     mutationFn: gastosApi.eliminar,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['gastos'] })
+      qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Gasto eliminado')
     },

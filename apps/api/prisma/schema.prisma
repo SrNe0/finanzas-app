@@ -36,24 +36,27 @@ model Movimiento {
   tipo        String
   fuenteId    String?  @map("fuente_id")
   deudaId     String?  @map("deuda_id")
+  gastoId     String?  @map("gasto_id")
   descripcion String?
   monto       Int
   fecha       DateTime @default(now())
   fuente      Fuente?  @relation(fields: [fuenteId], references: [id])
   deuda       Deuda?   @relation(fields: [deudaId], references: [id])
+  gasto       Gasto?   @relation(fields: [gastoId], references: [id])
 
   @@map("movimientos")
 }
 
 model Gasto {
-  id          String   @id @default(cuid())
+  id          String       @id @default(cuid())
   descripcion String
   categoria   String
   monto       Int
   mes         String
-  fuenteId    String?  @map("fuente_id")
-  fecha       DateTime @default(now())
-  fuente      Fuente?  @relation(fields: [fuenteId], references: [id])
+  fuenteId    String?      @map("fuente_id")
+  fecha       DateTime     @default(now())
+  fuente      Fuente?      @relation(fields: [fuenteId], references: [id])
+  movimientos Movimiento[]
 
   @@map("gastos")
 }
