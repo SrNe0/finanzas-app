@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Deuda } from '../../domain/entities/Deuda'
 import { IDeudaRepository } from '../../domain/repositories/IDeudaRepository'
 import { DeudaMapper } from '../mappers/DeudaMapper'
 
 export class PrismaDeudaRepository implements IDeudaRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient | Prisma.TransactionClient) {}
 
   async findById(id: string): Promise<Deuda | null> {
     const record = await this.prisma.deuda.findUnique({ where: { id } })

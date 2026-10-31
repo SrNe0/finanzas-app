@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Fuente } from '../../domain/entities/Fuente'
 import { IFuenteRepository } from '../../domain/repositories/IFuenteRepository'
 import { FuenteMapper } from '../mappers/FuenteMapper'
 
 export class PrismaFuenteRepository implements IFuenteRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient | Prisma.TransactionClient) {}
 
   async findById(id: string): Promise<Fuente | null> {
     const record = await this.prisma.fuente.findUnique({ where: { id } })
