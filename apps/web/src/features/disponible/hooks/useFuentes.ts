@@ -22,6 +22,7 @@ export function useRegistrarIngreso() {
       fuentesApi.ingresar(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Ingreso registrado')
     },
@@ -43,6 +44,7 @@ export function useTransferirFuentes() {
     mutationFn: fuentesApi.transferir,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Transferencia realizada')
     },

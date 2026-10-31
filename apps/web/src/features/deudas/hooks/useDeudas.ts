@@ -30,6 +30,7 @@ export function useActualizarDeuda() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['deudas'] })
       qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Deuda actualizada')
     },
@@ -45,6 +46,7 @@ export function usePagarDeuda() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['deudas'] })
       qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Pago registrado')
     },
