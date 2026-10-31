@@ -8,6 +8,7 @@ export class Movimiento {
     public deudaId: string | null,
     public descripcion: string | null,
     public monto: number,
-    public fecha: Date
+    public fecha: Date,
+    public gastoId: string | null = null
   ) {}
 }
