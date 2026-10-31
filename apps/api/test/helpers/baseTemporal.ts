@@ -57,7 +57,8 @@ export async function crearBaseTemporal(): Promise<BaseTemporal> {
     prisma,
     cerrar: async () => {
       await prisma.$disconnect()
-      fs.rmSync(dir, { recursive: true, force: true })
+      // En Windows el archivo puede seguir en uso un instante después de desconectar Prisma: se reintenta
+      fs.rmSync(dir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 })
     },
   }
 }
