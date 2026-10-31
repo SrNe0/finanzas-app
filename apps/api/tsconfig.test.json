@@ -6,6 +6,6 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "include": ["src", "test", "vitest.config.mts"],
+  "include": ["src", "test", "prisma/seed-demo.ts", "vitest.config.mts"],
   "exclude": ["node_modules", "dist"]
 }
