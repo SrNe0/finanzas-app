@@ -2,7 +2,7 @@ import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { NotFoundError, DomainError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, TransferirFuentesInput, FuenteDTO } from 'shared-types'
-import { FuenteMapper } from '../../../infrastructure/mappers/FuenteMapper'
+import { FuenteDtoMapper } from '../../mappers/FuenteDtoMapper'
 
 export class TransferirFuentesUseCase {
   constructor(private uow: IUnitOfWork) {}
@@ -48,7 +48,7 @@ export class TransferirFuentesUseCase {
         )
       )
 
-      return { origen: FuenteMapper.toDTO(origen), destino: FuenteMapper.toDTO(destino) }
+      return { origen: FuenteDtoMapper.toDTO(origen), destino: FuenteDtoMapper.toDTO(destino) }
     })
   }
 }

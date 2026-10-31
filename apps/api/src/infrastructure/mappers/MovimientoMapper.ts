@@ -1,19 +1,9 @@
+import type { Movimiento as MovimientoRecord } from '@prisma/client'
+import { TipoMovimiento } from 'shared-types'
 import { Movimiento } from '../../domain/entities/Movimiento'
-import { TipoMovimiento, MovimientoDTO } from 'shared-types'
-
-type PrismaMovimiento = {
-  id: string
-  tipo: string
-  fuenteId: string | null
-  deudaId: string | null
-  gastoId: string | null
-  descripcion: string | null
-  monto: number
-  fecha: Date
-}
 
 export class MovimientoMapper {
-  static toDomain(record: PrismaMovimiento): Movimiento {
+  static toDomain(record: MovimientoRecord): Movimiento {
     return new Movimiento(
       record.id,
       record.tipo as TipoMovimiento,
@@ -24,17 +14,5 @@ export class MovimientoMapper {
       record.fecha,
       record.gastoId
     )
-  }
-
-  static toDTO(m: Movimiento): MovimientoDTO {
-    return {
-      id: m.id ?? '',
-      tipo: m.tipo,
-      fuenteId: m.fuenteId,
-      deudaId: m.deudaId,
-      descripcion: m.descripcion,
-      monto: m.monto,
-      fecha: m.fecha.toISOString(),
-    }
   }
 }

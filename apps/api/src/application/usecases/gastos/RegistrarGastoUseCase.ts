@@ -3,7 +3,7 @@ import { IUnitOfWork } from '../../../domain/repositories/IUnitOfWork'
 import { Movimiento } from '../../../domain/entities/Movimiento'
 import { NotFoundError } from '../../../domain/errors/DomainError'
 import { TipoMovimiento, RegistrarGastoInput, GastoDTO } from 'shared-types'
-import { GastoMapper } from '../../../infrastructure/mappers/GastoMapper'
+import { GastoDtoMapper } from '../../mappers/GastoDtoMapper'
 
 export class RegistrarGastoUseCase {
   constructor(private uow: IUnitOfWork) {}
@@ -44,7 +44,7 @@ export class RegistrarGastoUseCase {
         )
       }
 
-      return GastoMapper.toDTO(saved)
+      return GastoDtoMapper.toDTO(saved)
     })
   }
 }

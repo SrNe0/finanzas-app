@@ -3,9 +3,9 @@ import { IGastoRepository } from '../../../domain/repositories/IGastoRepository'
 import { IFuenteRepository } from '../../../domain/repositories/IFuenteRepository'
 import { IMovimientoRepository } from '../../../domain/repositories/IMovimientoRepository'
 import { ResumenMensualDTO } from 'shared-types'
-import { DeudaMapper } from '../../../infrastructure/mappers/DeudaMapper'
-import { GastoMapper } from '../../../infrastructure/mappers/GastoMapper'
-import { MovimientoMapper } from '../../../infrastructure/mappers/MovimientoMapper'
+import { DeudaDtoMapper } from '../../mappers/DeudaDtoMapper'
+import { GastoDtoMapper } from '../../mappers/GastoDtoMapper'
+import { MovimientoDtoMapper } from '../../mappers/MovimientoDtoMapper'
 
 export class ObtenerResumenMensualUseCase {
   constructor(
@@ -41,9 +41,9 @@ export class ObtenerResumenMensualUseCase {
       totalPagosDeuda,
       totalGastos,
       totalDisponible,
-      deudas: deudas.map(DeudaMapper.toDTO),
-      gastos: gastos.map(GastoMapper.toDTO),
-      ultimosMovimientos: ultimosMovimientos.map(MovimientoMapper.toDTO),
+      deudas: deudas.map(DeudaDtoMapper.toDTO),
+      gastos: gastos.map(GastoDtoMapper.toDTO),
+      ultimosMovimientos: ultimosMovimientos.map(MovimientoDtoMapper.toDTO),
     }
   }
 }
