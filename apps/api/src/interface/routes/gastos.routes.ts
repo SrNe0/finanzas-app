@@ -1,18 +1,19 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { Container } from '../../shared/container'
+import { MesSchema } from './schemas'
 
 const RegistrarGastoSchema = z.object({
   descripcion: z.string().min(1),
   categoria: z.string().min(1),
   monto: z.number().int().positive(),
-  mes: z.string().regex(/^\d{4}-\d{2}$/),
+  mes: MesSchema,
   fuenteId: z.string().optional(),
 })
 
 export async function gastosRoutes(fastify: FastifyInstance, container: Container) {
   fastify.get('/gastos', async (req) => {
-    const { mes } = z.object({ mes: z.string().regex(/^\d{4}-\d{2}$/) }).parse(req.query)
+    const { mes } = z.object({ mes: MesSchema }).parse(req.query)
     return container.gastos.listar.execute(mes)
   })
 

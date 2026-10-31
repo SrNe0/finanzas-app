@@ -1,6 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify'
 import cors from '@fastify/cors'
 import { ZodError } from 'zod'
+import { Prisma } from '@prisma/client'
 import { Container } from './shared/container'
 import { deudasRoutes } from './interface/routes/deudas.routes'
 import { fuentesRoutes } from './interface/routes/fuentes.routes'
@@ -30,6 +31,9 @@ export async function buildApp(container: Container, opciones: { logger?: boolea
     }
     if (error instanceof NotFoundError) {
       return reply.code(404).send({ error: { code: 'NOT_FOUND', message: error.message } })
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+      return reply.code(404).send({ error: { code: 'NOT_FOUND', message: 'Registro no encontrado' } })
     }
     if (error instanceof DomainError) {
       return reply.code(422).send({ error: { code: 'DOMAIN_ERROR', message: error.message } })

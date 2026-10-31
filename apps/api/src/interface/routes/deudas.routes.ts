@@ -1,11 +1,12 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { Container } from '../../shared/container'
+import { MesSchema } from './schemas'
 
 const CrearDeudaSchema = z.object({
   nombre: z.string().min(1),
   valor: z.number().int().positive(),
-  mes: z.string().regex(/^\d{4}-\d{2}$/),
+  mes: MesSchema,
 })
 
 const PagarDeudaSchema = z.object({
@@ -22,7 +23,7 @@ const ActualizarDeudaSchema = z.object({
 
 export async function deudasRoutes(fastify: FastifyInstance, container: Container) {
   fastify.get('/deudas', async (req) => {
-    const query = z.object({ mes: z.string().regex(/^\d{4}-\d{2}$/) }).parse(req.query)
+    const query = z.object({ mes: MesSchema }).parse(req.query)
     return container.deudas.listar.execute(query.mes)
   })
 
