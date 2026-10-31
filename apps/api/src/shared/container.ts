@@ -38,7 +38,7 @@ export function buildContainer() {
       crear: new CrearDeudaUseCase(deudaRepo),
       pagar: new PagarDeudaUseCase(uow),
       actualizar: new ActualizarSaldoDeudaUseCase(uow),
-      eliminar: new EliminarDeudaUseCase(deudaRepo),
+      eliminar: new EliminarDeudaUseCase(uow),
       listar: new ListarDeudasPorMesUseCase(deudaRepo),
     },
     gastos: {

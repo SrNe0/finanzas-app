@@ -1,4 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client'
+import { TipoMovimiento } from 'shared-types'
 import { Movimiento } from '../../domain/entities/Movimiento'
 import { IMovimientoRepository } from '../../domain/repositories/IMovimientoRepository'
 import { MovimientoMapper } from '../mappers/MovimientoMapper'
@@ -44,6 +45,13 @@ export class PrismaMovimientoRepository implements IMovimientoRepository {
   async findByGastoId(gastoId: string): Promise<Movimiento | null> {
     const record = await this.prisma.movimiento.findFirst({ where: { gastoId } })
     return record ? MovimientoMapper.toDomain(record as any) : null
+  }
+
+  async findPagosByDeudaId(deudaId: string): Promise<Movimiento[]> {
+    const records = await this.prisma.movimiento.findMany({
+      where: { deudaId, tipo: TipoMovimiento.PAGO_DEUDA },
+    })
+    return records.map(r => MovimientoMapper.toDomain(r as any))
   }
 
   async delete(id: string): Promise<void> {

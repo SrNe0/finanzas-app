@@ -58,6 +58,8 @@ export function useEliminarDeuda() {
     mutationFn: deudasApi.eliminar,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['deudas'] })
+      qc.invalidateQueries({ queryKey: ['fuentes'] })
+      qc.invalidateQueries({ queryKey: ['fuente-historial'] })
       qc.invalidateQueries({ queryKey: ['resumen'] })
       toast.success('Deuda eliminada')
     },
