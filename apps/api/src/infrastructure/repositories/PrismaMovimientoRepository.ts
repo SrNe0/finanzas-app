@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { Movimiento } from '../../domain/entities/Movimiento'
 import { IMovimientoRepository } from '../../domain/repositories/IMovimientoRepository'
 import { MovimientoMapper } from '../mappers/MovimientoMapper'
 
 export class PrismaMovimientoRepository implements IMovimientoRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient | Prisma.TransactionClient) {}
 
   async save(movimiento: Movimiento): Promise<Movimiento> {
     const record = await this.prisma.movimiento.create({
