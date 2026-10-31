@@ -16,8 +16,21 @@ interface Props {
 export function PagarDesdeModal({ open, onClose, onConfirm, fuentes, monto, loading }: Props) {
   const [selected, setSelected] = useState<string>('')
 
+  const fuenteElegida = fuentes.find(f => f.id === selected)
+  const saldoInsuficiente = fuenteElegida ? fuenteElegida.saldo < monto : false
+
+  const handleClose = () => {
+    setSelected('')
+    onClose()
+  }
+
+  const handleConfirm = () => {
+    onConfirm(selected)
+    setSelected('')
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>¿De dónde salió la plata?</DialogTitle>
@@ -44,8 +57,8 @@ export function PagarDesdeModal({ open, onClose, onConfirm, fuentes, monto, load
           ))}
         </div>
         <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button disabled={!selected || loading} onClick={() => onConfirm(selected)}>
+          <Button variant="outline" onClick={handleClose}>Cancelar</Button>
+          <Button disabled={!selected || saldoInsuficiente || loading} onClick={handleConfirm}>
             {loading ? 'Procesando...' : 'Confirmar'}
           </Button>
         </div>
