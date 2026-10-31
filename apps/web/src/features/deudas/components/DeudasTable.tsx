@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Skeleton } from '@/shared/components/ui/skeleton'
+import { ErrorMensaje } from '@/shared/components/ErrorMensaje'
 import { useDeudas } from '../hooks/useDeudas'
 import { DeudaRow } from './DeudaRow'
 import { CrearDeudaModal } from './CrearDeudaModal'
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export function DeudasTable({ mes }: Props) {
-  const { data, isLoading } = useDeudas(mes)
+  const { data, isLoading, error, refetch } = useDeudas(mes)
   const { data: fuentes = [] } = useFuentes()
   const [crearOpen, setCrearOpen] = useState(false)
 
@@ -25,6 +26,8 @@ export function DeudasTable({ mes }: Props) {
       </div>
     )
   }
+
+  if (error) return <ErrorMensaje mensaje={error.message} onReintentar={() => refetch()} />
 
   const delMes = data?.delMes ?? []
   const arrastradas = data?.arrastradas ?? []
