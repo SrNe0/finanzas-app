@@ -1,6 +1,7 @@
 {
   "name": "finanzas-app",
   "private": true,
+  "version": "1.0.0",
   "description": "App web de finanzas personales de uso local: deudas, gastos y dinero disponible en pesos colombianos.",
   "license": "MIT",
   "repository": {
