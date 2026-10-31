@@ -46,6 +46,17 @@ pnpm --filter api test   # Vitest, contra una SQLite temporal
 - **Disponible**: Gestión de fuentes de dinero (cuenta, efectivo, bono, otro), nuevo ingreso, transferencias entre fuentes, historial de movimientos por fuente, agregar nuevas fuentes
 - **Tema**: Modo oscuro y claro persistente
 
+## Roadmap
+
+El trabajo se organiza en fases. El detalle y el estado de cada tarea están en los [milestones](https://github.com/SrNe0/finanzas-app/milestones) y los [issues](https://github.com/SrNe0/finanzas-app/issues) del repositorio.
+
+| Fase | Objetivo | Incluye |
+|---|---|---|
+| [1 — Arreglos](https://github.com/SrNe0/finanzas-app/milestone/1) | Corregir errores de datos y de seguridad | Rangos de fechas por mes, operaciones atómicas, reversa al eliminar gastos y deudas, validaciones, API solo en `127.0.0.1` |
+| [2 — Tests](https://github.com/SrNe0/finanzas-app/milestone/2) | Cubrir la lógica con pruebas | Entidades, casos de uso e integración de rutas; Vitest en la web |
+| [3 — Calidad y CI](https://github.com/SrNe0/finanzas-app/milestone/3) | Automatizar y ordenar el código | ESLint y Prettier, GitHub Actions, limpieza de dependencias, configuración por entorno |
+| [4 — Features](https://github.com/SrNe0/finanzas-app/milestone/4) | Nuevas funcionalidades | Por definir |
+
 ## Arquitectura
 
 ### Monorepo (pnpm workspaces)
