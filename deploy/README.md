@@ -16,7 +16,7 @@ siendo de uso local y sin autenticación: la demo no comparte nada con ella.
 | Archivo | Qué hace |
 | --- | --- |
 | `Dockerfile` | Imágenes `api` (API + seed + reinicio nocturno) y `web` (nginx con la web compilada) |
-| `compose.demo.yaml` | Une ambas: nginx comparte la red de la API, que sigue escuchando solo en `127.0.0.1` |
+| `compose.demo.yaml` | Une ambas: la API se une a la red de nginx (que no se reinicia) y sigue escuchando solo en `127.0.0.1` |
 | `deploy/nginx.conf` | Estáticos, proxy de `/api`, tope de 16 KB y límite de ritmo en peticiones que escriben |
 | `apps/web/.../DemoBanner.tsx` | Aviso de demo compartida; solo aparece si se compila con `VITE_DEMO_BANNER` |
 | `deploy/deploy-finanzas-demo.sh` | Script del servidor: despliega un commit de `main`, comprueba salud y hace rollback |
