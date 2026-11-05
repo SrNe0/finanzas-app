@@ -1,6 +1,7 @@
 # Finanzas Personales
 
 [![CI](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml/badge.svg)](https://github.com/SrNe0/finanzas-app/actions/workflows/ci.yml)
+[![Demo](https://img.shields.io/badge/demo-finanzas--demo.srne0.dev-3ddc97)](https://finanzas-demo.srne0.dev)
 [![Última versión](https://img.shields.io/github/v/release/SrNe0/finanzas-app?label=versi%C3%B3n)](https://github.com/SrNe0/finanzas-app/releases)
 [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-%E2%89%A5%2022-339933)
@@ -26,6 +27,8 @@ App web de finanzas personales para llevar las **deudas** (con abonos y arrastre
 Las capturas usan los datos ficticios de `pnpm db:seed:demo`.
 
 > **Uso local:** la app no tiene autenticación y guarda todo en una base SQLite en tu equipo. La API solo escucha en `127.0.0.1`. No la expongas a internet ni a una red que no sea de confianza.
+>
+> **Demo pública:** puedes probar la app en [finanzas-demo.srne0.dev](https://finanzas-demo.srne0.dev). Es una instancia aparte, con datos ficticios compartidos por todos los visitantes que se restablecen cada noche; no escribas información real. Cómo está montada y aislada: [deploy/README.md](deploy/README.md).
 
 ## Qué hace
 
