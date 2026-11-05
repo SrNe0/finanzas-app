@@ -75,4 +75,4 @@ jobs:
       - name: Desplegar en el servidor
         run: tailscale ssh deploy@archlinux "sudo /usr/local/sbin/deploy-finanzas-demo ${{ github.sha }}"
       - name: Verificar la demo
-        run: curl --fail --silent --show-error --retry 5 --retry-delay 5 https://finanzas-demo.srne0.dev/api/deudas > /dev/null
+        run: curl --fail --silent --show-error --retry 5 --retry-delay 5 https://finanzas-demo.srne0.dev/ > /dev/null

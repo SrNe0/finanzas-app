@@ -35,8 +35,10 @@ services:
     depends_on:
       api:
         condition: service_healthy
+    # Comprueba solo que nginx sirve la web: la salud de la API ya la vigila su propio healthcheck
+    # (y /api/deudas sin parámetros responde 400, que wget cuenta como fallo).
     healthcheck:
-      test: ['CMD-SHELL', 'wget -q --spider http://127.0.0.1/api/deudas || exit 1']
+      test: ['CMD-SHELL', 'wget -q --spider http://127.0.0.1/ || exit 1']
       interval: 15s
       timeout: 5s
       retries: 4
