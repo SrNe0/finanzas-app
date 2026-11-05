@@ -1,0 +1,45 @@
+# Demo pública. Uso (en el servidor):  docker compose -f compose.demo.yaml up -d --build
+name: finanzas-demo
+
+services:
+  api:
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
+    # La API escucha solo en 127.0.0.1 (diseño de la app). nginx comparte su red,
+    # así que solo se publica el puerto de nginx y solo en localhost: el acceso público es el tunnel.
+    ports:
+      - '127.0.0.1:${DEMO_PORT:-8091}:80'
+    tmpfs:
+      - /tmp
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3001/api/deudas').then(r => process.exit(r.status < 500 ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 90s
+
+  web:
+    build:
+      context: .
+      target: web
+    restart: unless-stopped
+    network_mode: 'service:api'
+    depends_on:
+      api:
+        condition: service_healthy
+    # Comprueba solo que nginx sirve la web: la salud de la API ya la vigila su propio healthcheck
+    # (y /api/deudas sin parámetros responde 400, que wget cuenta como fallo).
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q --spider http://127.0.0.1/ || exit 1']
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 20s
