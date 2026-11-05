@@ -6,6 +6,7 @@ import { Sun, Moon } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { ErrorBoundary } from '@/shared/components/ErrorBoundary'
 import { Cargando } from '@/shared/components/Cargando'
+import { DemoBanner } from '@/shared/components/DemoBanner'
 
 const TABS = [
   { path: '/', label: 'Resumen' },
@@ -21,6 +22,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen bg-background">
+      <DemoBanner />
       <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-1 min-w-0">

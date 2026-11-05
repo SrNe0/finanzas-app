@@ -1,0 +1,18 @@
+# Nunca copiar datos reales ni secretos a una imagen
+**/.env
+**/*.env
+**/*.db
+**/*.db-journal
+**/*.sqlite
+apps/data
+data
+
+node_modules
+**/node_modules
+**/dist
+.git
+.github
+.claude
+.idea
+docs
+*.md
